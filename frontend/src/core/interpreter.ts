@@ -13,7 +13,7 @@ export function parseCode(code: string): Command[] {
       commands.push({ type: "cast", arg });
     } else if (line.startsWith("repeat(")) {
       // Простая обработка repeat(n):
-      const times = Number(line.match(/\((\d+)\)/)?.[1] || 1);
+      const times = Number(line.match(/\((\d+)\)/)?.[1] || 1) - 1;
       const nextLine = lines[lines.indexOf(line) + 1];
       const innerCmd = nextLine?.match(/"(.+?)"/)?.[1];
       for (let i = 0; i < times; i++) {
