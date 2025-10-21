@@ -1,0 +1,1 @@
+Diploma project — web game: learning programming via magic.
