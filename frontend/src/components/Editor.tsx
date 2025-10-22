@@ -28,7 +28,12 @@ repeat(3):
         }}
       />
       <button
-        onClick={() => onRun(parseCode(code))}
+        onClick={() => {
+          const cmds = parseCode(code);
+          console.log("Input:", code);
+          console.log("Parsed:", parseCode(code));
+          onRun(cmds);
+        }}
         className="mt-2 bg-magicViolet px-4 py-2 rounded-xl hover:shadow-glow transition"
       >
         🔮 Произнести заклинание

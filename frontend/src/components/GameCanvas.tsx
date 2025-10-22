@@ -1,17 +1,32 @@
 import { Stage, Layer, Rect, Circle } from "react-konva";
-import { useEffect, useState } from "react";
-import gsap from "gsap";
+import { useEffect, useState, useRef } from "react";
 
-interface GameCanvasProps {
-  commands: { type: string; arg?: string }[];
+interface Command {
+  type: string;
+  arg?: string;
 }
 
-export default function GameCanvas({ commands }: GameCanvasProps) {
+interface GameCanvasProps {
+  commands: Command[];
+  initialPosition?: { x: number; y: number };
+}
+
+export default function GameCanvas({
+  commands,
+  initialPosition = { x: 0, y: 0 },
+}: GameCanvasProps) {
   const gridSize = 10;
   const cellSize = 50;
-  const [position, setPosition] = useState({ x: 0, y: 0 });
+  const [position, setPosition] = useState(initialPosition);
+  const [effects, setEffects] = useState<
+    { id: number; type: string; x: number; y: number }[]
+  >([]);
 
-  // Выполнение команд
+  const positionRef = useRef(position);
+  positionRef.current = position;
+
+  const effectId = useRef(0);
+
   useEffect(() => {
     if (commands.length === 0) return;
 
@@ -20,9 +35,9 @@ export default function GameCanvas({ commands }: GameCanvasProps) {
       const cmd = commands[i];
       if (!cmd) return;
 
-      setPosition((prev) => {
-        const next = { ...prev };
-        if (cmd.type === "move") {
+      if (cmd.type === "move") {
+        setPosition((prev) => {
+          const next = { ...prev };
           switch (cmd.arg) {
             case "right":
               next.x = Math.min(prev.x + 1, gridSize - 1);
@@ -38,9 +53,18 @@ export default function GameCanvas({ commands }: GameCanvasProps) {
               next.y = Math.max(prev.y - 1, 0);
               break;
           }
-        }
-        return next;
-      });
+          return next;
+        });
+      } else if (cmd.type === "cast") {
+        const { x, y } = positionRef.current;
+        const id = effectId.current++;
+        const newEffect = { id, type: cmd.arg || "spell", x, y };
+        setEffects((prev) => [...prev, newEffect]);
+
+        setTimeout(() => {
+          setEffects((prev) => prev.filter((e) => e.id !== id));
+        }, 800);
+      }
 
       i++;
       if (i < commands.length) {
@@ -71,6 +95,18 @@ export default function GameCanvas({ commands }: GameCanvasProps) {
               />
             );
           })}
+
+          {effects.map((eff) => (
+            <Circle
+              key={eff.id}
+              x={eff.x * cellSize + cellSize / 2}
+              y={eff.y * cellSize + cellSize / 2}
+              radius={20}
+              fill={eff.type === "fire" ? "#ff5500" : "#7afcff"}
+              opacity={0.7}
+            />
+          ))}
+
           <Circle
             x={position.x * cellSize + cellSize / 2}
             y={position.y * cellSize + cellSize / 2}
@@ -78,6 +114,7 @@ export default function GameCanvas({ commands }: GameCanvasProps) {
             fill="#7afcff"
             shadowColor="#7afcff"
             shadowBlur={20}
+            shadowOpacity={0.8}
           />
         </Layer>
       </Stage>
