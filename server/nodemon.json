@@ -2,5 +2,8 @@
   "watch": ["src"],
   "ext": "ts,json",
   "ignore": ["dist"],
-  "exec": "ts-node ./src/index.ts"
+  "exec": "ts-node ./src/index.ts",
+  "env": {
+    "TS_NODE_FILES": "true"
+  }
 }
