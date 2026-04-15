@@ -1,0 +1,70 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Difficulty {
+  easy
+  medium
+  hard
+}
+
+model User {
+  id           Int            @id @default(autoincrement())
+  email        String         @unique
+  username     String
+  passwordHash String
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+
+  progress     UserProgress[]
+}
+
+model Level {
+  id           Int            @id @default(autoincrement())
+  title        String
+  description  String?
+  gridSize     Int            @default(10)
+  initialState Json
+  goalState    Json
+  difficulty   Difficulty
+  orderIndex   Int
+  createdAt    DateTime       @default(now())
+
+  progress     UserProgress[]
+
+  @@index([orderIndex])
+}
+
+model UserProgress {
+  id            Int       @id @default(autoincrement())
+  userId        Int
+  levelId       Int
+  isCompleted   Boolean   @default(false)
+  bestSolution  String?
+  attemptsCount Int       @default(0)
+  completedAt   DateTime?
+
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  level         Level     @relation(fields: [levelId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, levelId])
+  @@index([userId])
+  @@index([levelId])
+}
+
+model Command {
+  id          Int     @id @default(autoincrement())
+  name        String
+  description String?
+  syntax      String
+  example     String?
+  category    String
+
+  @@unique([name])
+}
+
