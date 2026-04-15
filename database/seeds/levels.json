@@ -1,0 +1,78 @@
+[
+  {
+    "id": 1,
+    "title": "Первый шаг",
+    "gridSize": 10,
+    "initialState": {
+      "golem": { "x": 0, "y": 0, "direction": "east" },
+      "crystal": { "x": 3, "y": 0 },
+      "obstacles": []
+    },
+    "goal": { "type": "reach", "target": "crystal" },
+    "hints": ["Используй move() три раза"]
+  },
+  {
+    "id": 2,
+    "title": "Поворот",
+    "gridSize": 10,
+    "initialState": {
+      "golem": { "x": 0, "y": 0, "direction": "north" },
+      "crystal": { "x": 1, "y": 0 },
+      "obstacles": []
+    },
+    "goal": { "type": "reach", "target": "crystal" },
+    "hints": ["Сначала поверни направо: turn_right()", "Затем сделай move()"]
+  },
+  {
+    "id": 3,
+    "title": "Лабиринт",
+    "gridSize": 10,
+    "initialState": {
+      "golem": { "x": 0, "y": 2, "direction": "east" },
+      "crystal": { "x": 4, "y": 0 },
+      "obstacles": [
+        { "x": 1, "y": 2 },
+        { "x": 1, "y": 1 },
+        { "x": 2, "y": 1 },
+        { "x": 3, "y": 1 }
+      ]
+    },
+    "goal": { "type": "reach", "target": "crystal" },
+    "hints": [
+      "Обойди стену сверху: сначала turn_left() и move()",
+      "Дальше используй повороты и шаги, чтобы дойти до кристалла"
+    ]
+  },
+  {
+    "id": 4,
+    "title": "Цикл",
+    "gridSize": 10,
+    "initialState": {
+      "golem": { "x": 0, "y": 0, "direction": "east" },
+      "crystal": { "x": 6, "y": 0 },
+      "obstacles": []
+    },
+    "goal": { "type": "reach", "target": "crystal" },
+    "hints": ["Попробуй repeat 6: move()"]
+  },
+  {
+    "id": 5,
+    "title": "Мастер",
+    "gridSize": 10,
+    "initialState": {
+      "golem": { "x": 0, "y": 0, "direction": "east" },
+      "crystal": { "x": 5, "y": 2 },
+      "obstacles": [
+        { "x": 2, "y": 1 },
+        { "x": 2, "y": 2 },
+        { "x": 3, "y": 2 }
+      ]
+    },
+    "goal": { "type": "reach", "target": "crystal" },
+    "hints": [
+      "Иди вправо через repeat, затем поверни вниз",
+      "Комбинируй repeat + повороты"
+    ]
+  }
+]
+
