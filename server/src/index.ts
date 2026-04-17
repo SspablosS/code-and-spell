@@ -8,6 +8,8 @@ import { logger } from "./config/logger";
 import { errorHandler } from "./middleware/errorHandler.middleware";
 import { rateLimiter } from "./middleware/rateLimiter.middleware";
 import { authRouter } from "./routes/auth.routes";
+import { commandsRouter } from "./routes/commands.routes";
+import { levelsRouter } from "./routes/levels.routes";
 import { progressRouter } from "./routes/progress.routes";
 import { usersRouter } from "./routes/users.routes";
 
@@ -31,6 +33,8 @@ app.get("/health", (_req, res) => {
 app.use("/api/auth", authRouter);
 app.use("/api/users", usersRouter);
 app.use("/api/progress", progressRouter);
+app.use("/api/levels", levelsRouter);
+app.use("/api/commands", commandsRouter);
 
 app.use(errorHandler);
 
