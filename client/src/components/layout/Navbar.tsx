@@ -1,5 +1,4 @@
 import { Link, useNavigate } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
 import { useAuthStore } from '@/store/auth.store';
 import { logout } from '@/services/auth.service';
 
@@ -19,58 +18,101 @@ export function Navbar() {
     }
   }
 
-  return (
-    <nav className="bg-background border-b border-border">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="flex h-16 items-center justify-between">
-          {/* Logo */}
-          <Link to="/" className="flex items-center gap-2">
-            <span className="text-2xl" role="img" aria-label="Potion">
-              🧪
-            </span>
-            <span className="text-xl font-bold text-foreground tracking-tight">
-              Code & Spell
-            </span>
-          </Link>
+  const linkStyle = {
+    color: '#94a3b8',
+    fontSize: '0.9rem',
+    fontWeight: 500,
+    transition: 'color 0.2s',
+  };
 
-          {/* Navigation Links */}
-          <div className="flex items-center gap-6">
-            {user ? (
-              <>
-                <Link
-                  to="/levels"
-                  className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
-                >
-                  Уровни
-                </Link>
-                <Link
-                  to="/profile"
-                  className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
-                >
-                  Профиль
-                </Link>
-                <Button size="sm" className="font-medium" onClick={handleLogout}>
-                  Выйти
-                </Button>
-              </>
-            ) : (
-              <>
-                <Link
-                  to="/login"
-                  className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
-                >
-                  Войти
-                </Link>
-                <Link
-                  to="/register"
-                  className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
-                >
-                  Регистрация
-                </Link>
-              </>
-            )}
-          </div>
-        </div>
+  const linkHoverStyle = {
+    color: '#ffffff',
+  };
+
+  const buttonStyle = {
+    backgroundColor: '#6B4EE6',
+    color: 'white',
+    padding: '6px 18px',
+    borderRadius: '8px',
+    border: 'none',
+    fontWeight: 600,
+    fontSize: '0.9rem',
+    cursor: 'pointer',
+  };
+
+  const buttonHoverStyle = {
+    backgroundColor: '#5a3dd4',
+  };
+
+  return (
+    <nav style={{ backgroundColor: '#16213E', borderBottom: '1px solid #2a3a6a' }} className="px-6 py-4 flex justify-between items-center">
+      {/* Logo */}
+      <Link to="/" className="flex items-center gap-2">
+        <span className="text-2xl" role="img" aria-label="Potion">
+          ⚗️
+        </span>
+        <span
+          style={{
+            fontFamily: 'Inter',
+            fontWeight: 700,
+            fontSize: '1.25rem',
+            color: '#a78bfa',
+            letterSpacing: '-0.02em',
+          }}
+        >
+          Code & Spell
+        </span>
+      </Link>
+
+      {/* Navigation Links */}
+      <div className="flex items-center gap-8">
+        {user ? (
+          <>
+            <Link
+              to="/levels"
+              style={linkStyle}
+              onMouseEnter={(e) => e.currentTarget.style.color = linkHoverStyle.color}
+              onMouseLeave={(e) => e.currentTarget.style.color = linkStyle.color}
+            >
+              Уровни
+            </Link>
+            <Link
+              to="/profile"
+              style={linkStyle}
+              onMouseEnter={(e) => e.currentTarget.style.color = linkHoverStyle.color}
+              onMouseLeave={(e) => e.currentTarget.style.color = linkStyle.color}
+            >
+              Профиль
+            </Link>
+            <button
+              onClick={handleLogout}
+              style={buttonStyle}
+              onMouseEnter={(e) => e.currentTarget.style.backgroundColor = buttonHoverStyle.backgroundColor}
+              onMouseLeave={(e) => e.currentTarget.style.backgroundColor = buttonStyle.backgroundColor}
+            >
+              Выйти
+            </button>
+          </>
+        ) : (
+          <>
+            <Link
+              to="/login"
+              style={linkStyle}
+              onMouseEnter={(e) => e.currentTarget.style.color = linkHoverStyle.color}
+              onMouseLeave={(e) => e.currentTarget.style.color = linkStyle.color}
+            >
+              Войти
+            </Link>
+            <Link
+              to="/register"
+              style={buttonStyle}
+              onMouseEnter={(e) => e.currentTarget.style.backgroundColor = buttonHoverStyle.backgroundColor}
+              onMouseLeave={(e) => e.currentTarget.style.backgroundColor = buttonStyle.backgroundColor}
+            >
+              Регистрация
+            </Link>
+          </>
+        )}
       </div>
     </nav>
   );
