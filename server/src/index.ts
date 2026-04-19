@@ -6,7 +6,6 @@ import helmet from "helmet";
 import { env } from "./config/env";
 import { logger } from "./config/logger";
 import { errorHandler } from "./middleware/errorHandler.middleware";
-import { rateLimiter } from "./middleware/rateLimiter.middleware";
 import { authRouter } from "./routes/auth.routes";
 import { commandsRouter } from "./routes/commands.routes";
 import { levelsRouter } from "./routes/levels.routes";
@@ -24,7 +23,7 @@ app.use(
 );
 app.use(cookieParser());
 app.use(express.json());
-app.use(rateLimiter);
+// app.use(rateLimiter); // Отключено для разработки
 
 app.get("/health", (_req, res) => {
   res.status(200).json({ status: "ok" });

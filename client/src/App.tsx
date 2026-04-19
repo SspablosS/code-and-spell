@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
 
 import GamePage from './pages/GamePage';
@@ -8,10 +9,39 @@ import NotFoundPage from './pages/NotFoundPage';
 import ProfilePage from './pages/ProfilePage';
 import RegisterPage from './pages/RegisterPage';
 import { ProtectedRoute } from './components/ui/ProtectedRoute';
+import { LoadingSpinner } from './components/ui/LoadingSpinner';
+import { Layout } from './components/layout/Layout';
 import { useAuthStore } from './store/auth.store';
+import { me } from './services/auth.service';
 
 export default function App() {
   const user = useAuthStore((state) => state.user);
+  const setUser = useAuthStore((state) => state.setUser);
+  const [isInitializing, setIsInitializing] = useState(true);
+
+  useEffect(() => {
+    async function checkSession() {
+      try {
+        const response = await me();
+        setUser(response.user);
+      } catch {
+        setUser(null);
+      } finally {
+        setIsInitializing(false);
+      }
+    }
+
+    checkSession();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  if (isInitializing) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-background">
+        <LoadingSpinner />
+      </div>
+    );
+  }
 
   return (
     <Routes>
@@ -25,7 +55,9 @@ export default function App() {
         path="/levels"
         element={
           <ProtectedRoute>
-            <LevelsPage />
+            <Layout>
+              <LevelsPage />
+            </Layout>
           </ProtectedRoute>
         }
       />
@@ -33,7 +65,9 @@ export default function App() {
         path="/level/:id"
         element={
           <ProtectedRoute>
-            <GamePage />
+            <Layout>
+              <GamePage />
+            </Layout>
           </ProtectedRoute>
         }
       />
@@ -41,7 +75,9 @@ export default function App() {
         path="/profile"
         element={
           <ProtectedRoute>
-            <ProfilePage />
+            <Layout>
+              <ProfilePage />
+            </Layout>
           </ProtectedRoute>
         }
       />

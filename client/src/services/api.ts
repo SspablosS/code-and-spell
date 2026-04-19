@@ -29,7 +29,8 @@ api.interceptors.response.use(
     if (error.response?.status === 401) {
       const authStore = useAuthStore.getState();
       authStore.logout();
-      window.location.href = '/login';
+      // Не делаем window.location.href — это вызывает бесконечную перезагрузку
+      // App.tsx сам обработает setUser(null) и покажет нужную страницу
     }
     return Promise.reject(error);
   }
