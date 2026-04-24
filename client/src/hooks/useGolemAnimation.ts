@@ -6,7 +6,7 @@ interface UseGolemAnimationProps {
   steps: GameStep[];
   isCompleted: boolean;
   onStepApplied: (step: GameStep, index: number) => void;
-  onAnimationComplete: (isCompleted: boolean) => void;
+  onAnimationComplete: (isCompleted: boolean, steps: GameStep[]) => void;
 }
 
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -23,7 +23,7 @@ export function useGolemAnimation({
   const runAnimation = useCallback(async () => {
     if (isRunningRef.current) return;
     if (!steps || steps.length === 0) {
-      onAnimationComplete(isCompleted);
+      onAnimationComplete(isCompleted, steps);
       return;
     }
 
@@ -37,7 +37,7 @@ export function useGolemAnimation({
     }
 
     const lastStep = steps[steps.length - 1];
-    onAnimationComplete(lastStep?.success || isCompleted);
+    onAnimationComplete(lastStep?.success || isCompleted, steps);
     setIsAnimating(false);
     isRunningRef.current = false;
   }, [steps, isCompleted, onStepApplied, onAnimationComplete]);

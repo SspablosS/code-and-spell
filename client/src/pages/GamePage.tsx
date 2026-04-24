@@ -39,17 +39,14 @@ export default function GamePage() {
     applyStep(step);
   }, [applyStep]);
 
-  const handleAnimationComplete = useCallback(async (completed: boolean) => {
+  const handleAnimationComplete = useCallback(async (completed: boolean, steps: GameStep[]) => {
     setRunning(false);
     setAnimationSteps([]);
 
-    // Проверяем есть ли error steps в анимации
-    const hasError = animationSteps.some(step => step.type === 'error');
-    const errorMessage = animationSteps.find(step => step.type === 'error')?.message;
+    const errorStep = steps.find(step => step.type === 'error');
 
     if (completed) {
       setCompleted(true);
-      // Сохранить прогресс с победой
       if (currentLevel) {
         await upsertProgress(currentLevel.id, {
           isCompleted: true,
@@ -57,28 +54,17 @@ export default function GamePage() {
           attemptsCount: attemptsCount,
         });
       }
-    } else if (hasError) {
-      // Показать уведомление об ошибке и рестарт
-      setTimeout(() => {
-        if (currentLevel) {
-          setGolemState(currentLevel.initialState.golem);
-          setRunning(false);
-          setCompleted(false);
-          setError(errorMessage || 'Ошибка выполнения. Попробуй ещё раз!');
-        }
-      }, 600);
     } else {
-      // Автоматический рестарт если цель не достигнута (но нет ошибок)
       setTimeout(() => {
         if (currentLevel) {
           setGolemState(currentLevel.initialState.golem);
           setRunning(false);
           setCompleted(false);
-          setError('Цель не достигнута. Попробуй ещё раз!');
+          setError(errorStep?.message || 'Цель не достигнута. Попробуй ещё раз!');
         }
       }, 600);
     }
-  }, [currentLevel, code, setRunning, setCompleted, setGolemState, animationSteps, attemptsCount]);
+  }, [currentLevel, code, setRunning, setCompleted, setGolemState, attemptsCount]);
 
   useGolemAnimation({
     steps: animationSteps,
@@ -126,6 +112,12 @@ export default function GamePage() {
   const handleRun = async () => {
     if (!currentLevel) return;
 
+    // Проверка на пустой код
+    if (!code || code.trim() === '') {
+      setError('Напиши заклинание прежде чем запускать голема!');
+      return;
+    }
+
     setRunning(true);
     setError(null);
     setCompleted(false);
@@ -149,14 +141,15 @@ export default function GamePage() {
 
     const result = runCode(code, currentLevel.initialState.golem, levelContext);
 
-    // Если есть синтаксическая ошибка - показываем и не запускаем анимацию
-    if (result.error) {
+    // Синтаксическая ошибка (нет шагов вообще) — показать сразу
+    if (result.error && result.steps.length === 0) {
       setError(result.error);
       setRunning(false);
       return;
     }
 
-    // Запускаем анимацию для runtime ошибок (столкновения)
+    // Есть шаги (включая runtime ошибки типа столкновения) — запускаем анимацию
+    // result.error будет обработан в handleAnimationComplete через error-шаги
     setAnimationSteps(result.steps);
   };
 
