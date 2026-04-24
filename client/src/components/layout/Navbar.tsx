@@ -18,78 +18,90 @@ export function Navbar() {
     }
   }
 
+  const navStyle = {
+    position: 'fixed' as const,
+    top: 0,
+    width: '100%',
+    zIndex: 1000,
+    background: 'rgba(8,8,16,0.85)',
+    backdropFilter: 'blur(12px)',
+    borderBottom: '1px solid rgba(108,99,255,0.2)',
+    padding: '18px 60px',
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  };
+
+  const logoStyle = {
+    fontFamily: 'Cinzel, serif',
+    fontSize: '1.3rem',
+    color: '#fbbf24',
+    textDecoration: 'none' as const,
+    display: 'flex',
+    gap: '10px',
+    alignItems: 'center',
+  };
+
+  const logoIconStyle = {
+    width: '36px',
+    height: '36px',
+    background: 'linear-gradient(135deg, #6c63ff, #a855f7)',
+    borderRadius: '8px',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    fontSize: '20px',
+    boxShadow: '0 0 15px rgba(108,99,255,0.5)',
+  };
+
   const linkStyle = {
     color: '#94a3b8',
-    fontSize: '0.9rem',
     fontWeight: 500,
-    transition: 'color 0.2s',
+    textDecoration: 'none' as const,
+    position: 'relative' as const,
   };
 
   const linkHoverStyle = {
-    color: '#ffffff',
-  };
-
-  const buttonStyle = {
-    backgroundColor: '#6B4EE6',
-    color: 'white',
-    padding: '6px 18px',
-    borderRadius: '8px',
-    border: 'none',
-    fontWeight: 600,
-    fontSize: '0.9rem',
-    cursor: 'pointer',
-  };
-
-  const buttonHoverStyle = {
-    backgroundColor: '#5a3dd4',
+    color: '#fbbf24',
   };
 
   return (
-    <nav style={{ backgroundColor: '#16213E', borderBottom: '1px solid #2a3a6a' }} className="px-6 py-4 flex justify-between items-center">
+    <nav style={navStyle}>
       {/* Logo */}
-      <Link to="/" className="flex items-center gap-2">
-        <span className="text-2xl" role="img" aria-label="Potion">
-          ⚗️
-        </span>
-        <span
-          style={{
-            fontFamily: 'Inter',
-            fontWeight: 700,
-            fontSize: '1.25rem',
-            color: '#a78bfa',
-            letterSpacing: '-0.02em',
-          }}
-        >
-          Code & Spell
-        </span>
+      <Link to="/" style={logoStyle}>
+        <div style={logoIconStyle}>🔮</div>
+        <span>Code & Spell</span>
       </Link>
 
       {/* Navigation Links */}
-      <div className="flex items-center gap-8">
+      <div style={{ display: 'flex', gap: '2rem', alignItems: 'center' }}>
         {user ? (
           <>
             <Link
               to="/levels"
               style={linkStyle}
-              onMouseEnter={(e) => e.currentTarget.style.color = linkHoverStyle.color}
-              onMouseLeave={(e) => e.currentTarget.style.color = linkStyle.color}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.color = linkHoverStyle.color;
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.color = linkStyle.color;
+              }}
             >
               Уровни
             </Link>
             <Link
               to="/profile"
               style={linkStyle}
-              onMouseEnter={(e) => e.currentTarget.style.color = linkHoverStyle.color}
-              onMouseLeave={(e) => e.currentTarget.style.color = linkStyle.color}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.color = linkHoverStyle.color;
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.color = linkStyle.color;
+              }}
             >
               Профиль
             </Link>
-            <button
-              onClick={handleLogout}
-              style={buttonStyle}
-              onMouseEnter={(e) => e.currentTarget.style.backgroundColor = buttonHoverStyle.backgroundColor}
-              onMouseLeave={(e) => e.currentTarget.style.backgroundColor = buttonStyle.backgroundColor}
-            >
+            <button onClick={handleLogout} className="btn-magic-outline">
               Выйти
             </button>
           </>
@@ -98,17 +110,16 @@ export function Navbar() {
             <Link
               to="/login"
               style={linkStyle}
-              onMouseEnter={(e) => e.currentTarget.style.color = linkHoverStyle.color}
-              onMouseLeave={(e) => e.currentTarget.style.color = linkStyle.color}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.color = linkHoverStyle.color;
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.color = linkStyle.color;
+              }}
             >
               Войти
             </Link>
-            <Link
-              to="/register"
-              style={buttonStyle}
-              onMouseEnter={(e) => e.currentTarget.style.backgroundColor = buttonHoverStyle.backgroundColor}
-              onMouseLeave={(e) => e.currentTarget.style.backgroundColor = buttonStyle.backgroundColor}
-            >
+            <Link to="/register" className="btn-magic-primary">
               Регистрация
             </Link>
           </>

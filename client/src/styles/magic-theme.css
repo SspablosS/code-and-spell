@@ -1,0 +1,161 @@
+:root {
+  --primary: #6c63ff;
+  --secondary: #a855f7;
+  --accent: #fbbf24;
+  --dark: #0f0f1a;
+  --darker: #080810;
+  --surface: #13131f;
+  --surface2: #1a1a2e;
+  --light: #e0e7ff;
+  --muted: #64748b;
+  --success: #10b981;
+  --error: #f87171;
+}
+
+/* Фон с глубиной */
+body {
+  background: var(--darker);
+  background-image:
+    radial-gradient(ellipse at 20% 20%, rgba(108,99,255,0.08) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 80%, rgba(168,85,247,0.06) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 50%, rgba(251,191,36,0.03) 0%, transparent 70%);
+  background-attachment: fixed;
+  color: var(--light);
+  font-family: 'Inter', sans-serif;
+  min-height: 100vh;
+}
+
+/* Частицы — глобальный контейнер */
+#global-particles {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.magic-particle {
+  position: absolute;
+  width: 2px; height: 2px;
+  background: var(--accent);
+  border-radius: 50%;
+  animation: particleFloat linear infinite;
+  opacity: 0;
+}
+
+@keyframes particleFloat {
+  0%   { transform: translateY(100vh) translateX(0); opacity: 0; }
+  10%  { opacity: 0.6; }
+  90%  { opacity: 0.3; }
+  100% { transform: translateY(-100px) translateX(30px); opacity: 0; }
+}
+
+/* Кнопки */
+.btn-magic-primary {
+  padding: 12px 30px;
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 15px;
+  cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: 0 4px 20px rgba(108,99,255,0.35);
+  position: relative;
+  overflow: hidden;
+}
+.btn-magic-primary::after {
+  content: '';
+  position: absolute;
+  top: -50%; left: -60%;
+  width: 30%; height: 200%;
+  background: rgba(255,255,255,0.15);
+  transform: skewX(-20deg);
+  transition: left 0.4s;
+}
+.btn-magic-primary:hover::after { left: 130%; }
+.btn-magic-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(108,99,255,0.55);
+}
+
+.btn-magic-outline {
+  padding: 12px 30px;
+  background: transparent;
+  color: var(--primary);
+  border: 2px solid var(--primary);
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 15px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+.btn-magic-outline:hover {
+  background: var(--primary);
+  color: white;
+  box-shadow: 0 0 25px rgba(108,99,255,0.45);
+}
+
+/* Карточки */
+.magic-card {
+  background: rgba(19,19,31,0.8);
+  border: 1px solid rgba(108,99,255,0.2);
+  border-radius: 14px;
+  backdrop-filter: blur(10px);
+  transition: all 0.3s;
+  position: relative;
+  overflow: hidden;
+}
+.magic-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(108,99,255,0.5), transparent);
+}
+.magic-card:hover {
+  border-color: rgba(108,99,255,0.5);
+  box-shadow: 0 0 30px rgba(108,99,255,0.15);
+  transform: translateY(-3px);
+}
+
+/* Инпуты */
+.magic-input {
+  width: 100%;
+  background: rgba(8,8,16,0.8);
+  border: 1px solid rgba(108,99,255,0.25);
+  border-radius: 8px;
+  padding: 11px 14px;
+  color: var(--light);
+  font-size: 0.95rem;
+  font-family: 'Inter', sans-serif;
+  outline: none;
+  transition: border 0.2s, box-shadow 0.2s;
+}
+.magic-input:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 15px rgba(108,99,255,0.2);
+}
+
+/* Заголовки с Cinzel */
+.magic-title {
+  font-family: 'Cinzel', serif;
+  background: linear-gradient(135deg, #fff 0%, var(--accent) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Бейдж сложности */
+.badge-easy   { background: rgba(16,185,129,0.15); color: #10b981; border: 1px solid rgba(16,185,129,0.3); }
+.badge-medium { background: rgba(251,191,36,0.15);  color: #fbbf24; border: 1px solid rgba(251,191,36,0.3); }
+.badge-hard   { background: rgba(248,113,113,0.15); color: #f87171; border: 1px solid rgba(248,113,113,0.3); }
+.difficulty-badge {
+  display: inline-block;
+  padding: 3px 12px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}

@@ -83,10 +83,10 @@ export default function LevelsPage() {
   return (
     <div style={{ padding: '2rem 1.5rem' }}>
       <h1
+        className="magic-title"
         style={{
-          color: 'white',
-          fontSize: '1.75rem',
-          fontWeight: 700,
+          fontSize: '2rem',
+          fontFamily: 'Cinzel, serif',
           marginBottom: '0.5rem',
         }}
       >

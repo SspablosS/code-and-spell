@@ -46,56 +46,41 @@ export default function ProfilePage() {
       <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'center', marginBottom: '2rem' }}>
         <div
           style={{
-            width: '72px',
-            height: '72px',
+            width: 72,
+            height: 72,
             borderRadius: '50%',
-            backgroundColor: '#6B4EE6',
+            background: 'linear-gradient(135deg, #6c63ff, #a855f7)',
+            boxShadow: '0 0 25px rgba(108,99,255,0.4)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
+            fontFamily: 'Cinzel, serif',
             fontSize: '1.75rem',
-            fontWeight: 700,
             color: 'white',
           }}
         >
           {user?.username[0].toUpperCase()}
         </div>
         <div>
-          <div style={{ color: 'white', fontSize: '1.5rem', fontWeight: 700 }}>{user?.username}</div>
-          <div style={{ color: '#94a3b8', fontSize: '0.9rem', marginTop: '0.25rem' }}>{user?.email}</div>
+          <div style={{ fontFamily: 'Cinzel, serif', fontSize: '1.5rem', color: '#e0e7ff' }}>{user?.username}</div>
+          <div style={{ color: '#64748b', marginTop: '0.25rem' }}>{user?.email}</div>
         </div>
       </div>
 
       {/* Карточки статистики */}
       <div style={{ display: 'flex', gap: '1rem', marginBottom: '2rem' }}>
-        <div
-          style={{
-            backgroundColor: '#16213E',
-            borderRadius: '12px',
-            padding: '1.25rem 1.75rem',
-            border: '1px solid #2a3a6a',
-            flex: 1,
-          }}
-        >
-          <div style={{ fontSize: '2rem', fontWeight: 700, color: '#6B4EE6' }}>{stats?.completedLevels ?? 0}</div>
-          <div style={{ color: '#94a3b8', fontSize: '0.85rem', marginTop: '0.25rem' }}>Пройдено уровней</div>
+        <div className="magic-card" style={{ padding: '1.25rem 1.75rem', flex: 1 }}>
+          <div style={{ fontFamily: 'Cinzel, serif', fontSize: '2rem', color: '#fbbf24' }}>{stats?.completedLevels ?? 0}</div>
+          <div style={{ color: '#64748b', fontSize: '0.85rem', marginTop: '0.25rem' }}>Пройдено уровней</div>
         </div>
-        <div
-          style={{
-            backgroundColor: '#16213E',
-            borderRadius: '12px',
-            padding: '1.25rem 1.75rem',
-            border: '1px solid #2a3a6a',
-            flex: 1,
-          }}
-        >
-          <div style={{ fontSize: '2rem', fontWeight: 700, color: '#6B4EE6' }}>{stats?.totalAttempts ?? 0}</div>
-          <div style={{ color: '#94a3b8', fontSize: '0.85rem', marginTop: '0.25rem' }}>Попыток</div>
+        <div className="magic-card" style={{ padding: '1.25rem 1.75rem', flex: 1 }}>
+          <div style={{ fontFamily: 'Cinzel, serif', fontSize: '2rem', color: '#fbbf24' }}>{stats?.totalAttempts ?? 0}</div>
+          <div style={{ color: '#64748b', fontSize: '0.85rem', marginTop: '0.25rem' }}>Попыток</div>
         </div>
       </div>
 
       {/* Заголовок секции списка */}
-      <div style={{ color: 'white', fontSize: '1.1rem', fontWeight: 600, marginBottom: '1rem' }}>
+      <div className="magic-title" style={{ fontFamily: 'Cinzel, serif', fontSize: '1.1rem', marginBottom: '1rem' }}>
         Пройденные уровни
       </div>
 
@@ -104,44 +89,24 @@ export default function ProfilePage() {
         completedLevels.map((p) => (
           <div
             key={p.levelId}
-            style={{
-              backgroundColor: '#16213E',
-              borderRadius: '10px',
-              padding: '1rem 1.25rem',
-              marginBottom: '0.75rem',
-              border: '1px solid #2a3a6a',
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-            }}
+            className="magic-card"
+            style={{ padding: '1rem 1.25rem', marginBottom: '0.75rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
           >
             <div style={{ display: 'flex', alignItems: 'center' }}>
-              <span style={{ color: '#97e195', fontWeight: 700, marginRight: '0.75rem' }}>✓</span>
-              <span style={{ color: 'white', fontWeight: 500 }}>Уровень {p.levelId}</span>
+              <span style={{ color: '#10b981', fontWeight: 700, marginRight: '0.75rem' }}>✓</span>
+              <span style={{ color: '#e0e7ff', fontWeight: 500 }}>Уровень {p.levelId}</span>
             </div>
             {p.completedAt && (
-              <div style={{ color: '#94a3b8', fontSize: '0.85rem' }}>
+              <div style={{ color: '#64748b', fontSize: '0.85rem' }}>
                 {new Date(p.completedAt).toLocaleDateString('ru-RU')}
               </div>
             )}
           </div>
         ))
       ) : (
-        <div style={{ color: '#94a3b8', textAlign: 'center', padding: '2rem' }}>
+        <div style={{ color: '#64748b', textAlign: 'center', padding: '2rem' }}>
           <div style={{ marginBottom: '1rem' }}>Ты ещё не прошёл ни одного уровня. Начни прямо сейчас! 🧙</div>
-          <button
-            onClick={() => navigate('/levels')}
-            style={{
-              backgroundColor: '#6B4EE6',
-              color: 'white',
-              border: 'none',
-              borderRadius: '8px',
-              padding: '12px 24px',
-              fontWeight: 600,
-              cursor: 'pointer',
-              fontSize: '1rem',
-            }}
-          >
+          <button onClick={() => navigate('/levels')} className="btn-magic-primary">
             К уровням
           </button>
         </div>
