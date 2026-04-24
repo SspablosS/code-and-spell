@@ -1,4 +1,4 @@
-import { Stage, Layer, Rect, Circle, Text } from 'react-konva';
+import { Stage, Layer, Rect, Text } from 'react-konva';
 import type { Level, GolemState } from '../../types';
 
 interface GameCanvasProps {
@@ -78,47 +78,25 @@ export default function GameCanvas({ level, golemState, isAnimating }: GameCanva
         ))}
 
         {/* Кристалл */}
-        <Circle
-          x={level.initialState.crystal.x * CELL_SIZE + CELL_SIZE / 2}
-          y={level.initialState.crystal.y * CELL_SIZE + CELL_SIZE / 2}
-          radius={CELL_SIZE * 0.28}
-          fill="#4ECDC4"
-          shadowColor="#4ECDC4"
-          shadowBlur={12}
-          shadowOpacity={0.8}
-        />
         <Text
           x={level.initialState.crystal.x * CELL_SIZE}
           y={level.initialState.crystal.y * CELL_SIZE}
           width={CELL_SIZE}
           height={CELL_SIZE}
           text="💎"
-          fontSize={22}
+          fontSize={32}
           align="center"
           verticalAlign="middle"
-          offsetX={CELL_SIZE / 2}
-          offsetY={CELL_SIZE / 2}
         />
 
         {/* Голем */}
-        <Rect
-          x={golemState.x * CELL_SIZE + 3}
-          y={golemState.y * CELL_SIZE + 3}
-          width={CELL_SIZE - 6}
-          height={CELL_SIZE - 6}
-          fill="#6B4EE6"
-          cornerRadius={8}
-          shadowColor="#6B4EE6"
-          shadowBlur={8}
-          shadowOpacity={0.6}
-        />
         <Text
-          x={golemState.x * CELL_SIZE + 3}
-          y={golemState.y * CELL_SIZE + 3}
-          width={CELL_SIZE - 6}
-          height={CELL_SIZE - 6}
+          x={golemState.x * CELL_SIZE}
+          y={golemState.y * CELL_SIZE}
+          width={CELL_SIZE}
+          height={CELL_SIZE}
           text={directionEmoji[golemState.direction]}
-          fontSize={20}
+          fontSize={32}
           align="center"
           verticalAlign="middle"
         />

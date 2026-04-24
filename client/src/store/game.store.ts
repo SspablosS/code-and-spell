@@ -23,7 +23,7 @@ interface GameState {
 
 export const useGameStore = create<GameState>((set) => ({
   currentLevel: null,
-  golemState: { x: 0, y: 0, direction: 'north' },
+  golemState: { x: 0, y: 0, direction: 'east' },
   code: '',
   isRunning: false,
   isCompleted: false,
@@ -44,7 +44,7 @@ export const useGameStore = create<GameState>((set) => ({
     })),
   reset: () =>
     set({
-      golemState: { x: 0, y: 0, direction: 'north' },
+      golemState: { x: 0, y: 0, direction: 'east' },
       code: '',
       isRunning: false,
       isCompleted: false,

@@ -32,23 +32,23 @@ function executeInstructions(
               golemState: { ...golem },
               message: 'Голем упёрся в стену',
             });
-            return 'Голем упёрся в стену';
+            // Не возвращаем ошибку сразу, продолжаем выполнение для анимации
+          } else {
+            // Проверка препятствий
+            const obstacleHit = context.obstacles.some((obs) => obs.x === newX && obs.y === newY);
+            if (obstacleHit) {
+              result.push({
+                type: 'error',
+                golemState: { ...golem },
+                message: 'Голем упёрся в препятствие',
+              });
+              // Не возвращаем ошибку сразу, продолжаем выполнение для анимации
+            } else {
+              golem = { ...golem, x: newX, y: newY };
+              result.push({ type: 'move', golemState: { ...golem } });
+              steps++;
+            }
           }
-
-          // Проверка препятствий
-          const obstacleHit = context.obstacles.some((obs) => obs.x === newX && obs.y === newY);
-          if (obstacleHit) {
-            result.push({
-              type: 'error',
-              golemState: { ...golem },
-              message: 'Голем упёрся в препятствие',
-            });
-            return 'Голем упёрся в препятствие';
-          }
-
-          golem = { ...golem, x: newX, y: newY };
-          result.push({ type: 'move', golemState: { ...golem } });
-          steps++;
         } else if (instruction.name === 'turn_left') {
           if (steps >= MAX_STEPS) {
             throw new Error('Too many steps (limit: 1000)');
@@ -76,7 +76,7 @@ function executeInstructions(
               golemState: { ...golem },
               message: 'Здесь нечего собирать',
             });
-            return 'Здесь нечего собирать';
+            // Не возвращаем ошибку сразу, продолжаем выполнение для анимации
           }
         }
       } else if (instruction.type === 'repeat') {

@@ -43,6 +43,11 @@ export default function GamePage() {
   const handleAnimationComplete = useCallback((completed: boolean) => {
     setRunning(false);
     setAnimationSteps([]);
+
+    // Проверяем есть ли error steps в анимации
+    const hasError = animationSteps.some(step => step.type === 'error');
+    const errorMessage = animationSteps.find(step => step.type === 'error')?.message;
+
     if (completed) {
       setCompleted(true);
       // Сохранить прогресс
@@ -53,8 +58,19 @@ export default function GamePage() {
           attemptsCount: 1,
         });
       }
+    } else if (hasError) {
+      // Показать уведомление об ошибке и рестарт
+      setTimeout(() => {
+        if (currentLevel) {
+          setGolemState(currentLevel.initialState.golem);
+          setRunning(false);
+          setCompleted(false);
+          setRestartMessage(errorMessage || 'Ошибка выполнения. Попробуй ещё раз! 🔄');
+          setTimeout(() => setRestartMessage(null), 3000);
+        }
+      }, 600);
     } else {
-      // Автоматический рестарт если цель не достигнута
+      // Автоматический рестарт если цель не достигнута (но нет ошибок)
       setTimeout(() => {
         if (currentLevel) {
           setGolemState(currentLevel.initialState.golem);
@@ -65,7 +81,7 @@ export default function GamePage() {
         }
       }, 600);
     }
-  }, [currentLevel, code, setRunning, setCompleted, setGolemState]);
+  }, [currentLevel, code, setRunning, setCompleted, setGolemState, animationSteps]);
 
   useGolemAnimation({
     steps: animationSteps,
@@ -116,13 +132,7 @@ export default function GamePage() {
 
     const result = runCode(code, currentLevel.initialState.golem, levelContext);
 
-    if (result.error) {
-      setError(result.error);
-      setRunning(false);
-      return;
-    }
-
-    // Явно запускаем анимацию
+    // Всегда запускаем анимацию, даже при ошибках
     setAnimationSteps(result.steps);
   };
 
