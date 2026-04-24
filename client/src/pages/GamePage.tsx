@@ -16,7 +16,6 @@ export default function GamePage() {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [restartMessage, setRestartMessage] = useState<string | null>(null);
   const [animationSteps, setAnimationSteps] = useState<GameStep[]>([]);
 
   const {
@@ -26,7 +25,6 @@ export default function GamePage() {
     isRunning,
     isCompleted,
     isFailed,
-    errorMessage,
     setLevel,
     setCode,
     setRunning,
@@ -65,8 +63,7 @@ export default function GamePage() {
           setGolemState(currentLevel.initialState.golem);
           setRunning(false);
           setCompleted(false);
-          setRestartMessage(errorMessage || 'Ошибка выполнения. Попробуй ещё раз! 🔄');
-          setTimeout(() => setRestartMessage(null), 3000);
+          setError(errorMessage || 'Ошибка выполнения. Попробуй ещё раз!');
         }
       }, 600);
     } else {
@@ -76,8 +73,7 @@ export default function GamePage() {
           setGolemState(currentLevel.initialState.golem);
           setRunning(false);
           setCompleted(false);
-          setRestartMessage('Цель не достигнута. Попробуй ещё раз! 🔄');
-          setTimeout(() => setRestartMessage(null), 3000);
+          setError('Цель не достигнута. Попробуй ещё раз!');
         }
       }, 600);
     }
@@ -122,6 +118,7 @@ export default function GamePage() {
 
     setRunning(true);
     setError(null);
+    setCompleted(false);
 
     const levelContext = {
       gridSize: currentLevel.gridSize,
@@ -132,7 +129,14 @@ export default function GamePage() {
 
     const result = runCode(code, currentLevel.initialState.golem, levelContext);
 
-    // Всегда запускаем анимацию, даже при ошибках
+    // Если есть синтаксическая ошибка - показываем и не запускаем анимацию
+    if (result.error) {
+      setError(result.error);
+      setRunning(false);
+      return;
+    }
+
+    // Запускаем анимацию для runtime ошибок (столкновения)
     setAnimationSteps(result.steps);
   };
 
@@ -144,7 +148,6 @@ export default function GamePage() {
     setRunning(false);
     setCompleted(false);
     setError(null);
-    setRestartMessage(null);
   };
 
   const handleNextLevel = () => {
@@ -268,23 +271,6 @@ export default function GamePage() {
           >
             Заклинание
           </div>
-          {restartMessage && (
-            <div
-              style={{
-                backgroundColor: 'rgba(248,113,113,0.15)',
-                border: '1px solid #f87171',
-                borderRadius: '10px',
-                padding: '12px 16px',
-                color: '#f87171',
-                fontWeight: 500,
-                marginBottom: '1rem',
-                textAlign: 'center',
-                animation: 'fadeIn 0.3s ease',
-              }}
-            >
-              {restartMessage}
-            </div>
-          )}
           <CodeEditor value={code} onChange={setCode} disabled={isRunning} />
           <div style={{ marginTop: '1rem' }}>
             <GameControls
@@ -294,7 +280,7 @@ export default function GamePage() {
               isRunning={isRunning}
               isCompleted={isCompleted}
               isFailed={isFailed}
-              error={errorMessage || error}
+              error={error}
             />
           </div>
         </div>
