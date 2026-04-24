@@ -14,8 +14,10 @@ describe('Auth API', () => {
   });
 
   beforeEach(async () => {
-    // Очистка перед каждым тестом
-    await prisma.user.deleteMany();
+    // Очистка перед каждым тестом — только тестовых пользователей
+    await prisma.user.deleteMany({
+      where: { email: { contains: 'test' } }
+    });
   });
 
   const testUser = {
