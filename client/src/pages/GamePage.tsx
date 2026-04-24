@@ -112,10 +112,10 @@ export default function GamePage() {
 
   useEffect(() => {
     if (currentLevel) {
-      // Сбросить golemState при смене уровня
-      reset();
+      // Установить golemState из initialState уровня
+      setGolemState(currentLevel.initialState.golem);
     }
-  }, [currentLevel, reset]);
+  }, [currentLevel, setGolemState]);
 
   const handleRun = () => {
     if (!currentLevel) return;
@@ -144,6 +144,7 @@ export default function GamePage() {
     setRunning(false);
     setCompleted(false);
     setError(null);
+    setRestartMessage(null);
   };
 
   const handleNextLevel = () => {
