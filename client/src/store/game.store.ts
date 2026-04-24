@@ -14,6 +14,8 @@ interface GameState {
   setLevel: (level: Level | null) => void;
   setCode: (code: string) => void;
   setRunning: (isRunning: boolean) => void;
+  setSteps: (steps: GameStep[]) => void;
+  setCompleted: (isCompleted: boolean) => void;
   applyStep: (step: GameStep) => void;
   reset: () => void;
 }
@@ -31,6 +33,8 @@ export const useGameStore = create<GameState>((set) => ({
   setLevel: (level) => set({ currentLevel: level }),
   setCode: (code) => set({ code }),
   setRunning: (isRunning) => set({ isRunning }),
+  setSteps: (steps) => set({ steps, currentStepIndex: 0 }),
+  setCompleted: (isCompleted) => set({ isCompleted }),
   applyStep: (step) =>
     set((state) => ({
       golemState: step.golemState,

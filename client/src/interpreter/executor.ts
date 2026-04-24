@@ -96,8 +96,13 @@ function executeInstructions(
 
   const error = execute(instructions);
 
+  const lastStep = result[result.length - 1];
   const isCompleted =
-    !error && golem.x === context.crystal.x && golem.y === context.crystal.y;
+    !error &&
+    golem.x === context.crystal.x &&
+    golem.y === context.crystal.y &&
+    lastStep?.type === 'collect' &&
+    lastStep?.success === true;
 
   return {
     steps: result,

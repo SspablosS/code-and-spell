@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import type { GameStep } from '../types';
 import { STEP_DELAY_MS } from '../interpreter/constants';
 
@@ -18,23 +18,28 @@ export function useGolemAnimation({
   onAnimationComplete,
 }: UseGolemAnimationProps) {
   const [isAnimating, setIsAnimating] = useState(false);
+  const isRunningRef = useRef(false);
 
   const runAnimation = useCallback(async () => {
-    if (steps.length === 0) {
+    if (isRunningRef.current) return;
+    if (!steps || steps.length === 0) {
       onAnimationComplete(isCompleted);
       return;
     }
 
+    isRunningRef.current = true;
     setIsAnimating(true);
 
     for (let i = 0; i < steps.length; i++) {
-      onStepApplied(steps[i], i);
+      const step = steps[i];
+      onStepApplied(step, i);
       await delay(STEP_DELAY_MS);
     }
 
     const lastStep = steps[steps.length - 1];
     onAnimationComplete(lastStep?.success || isCompleted);
     setIsAnimating(false);
+    isRunningRef.current = false;
   }, [steps, isCompleted, onStepApplied, onAnimationComplete]);
 
   useEffect(() => {
@@ -42,7 +47,10 @@ export function useGolemAnimation({
       const timeout = setTimeout(() => {
         runAnimation();
       }, 0);
-      return () => clearTimeout(timeout);
+      return () => {
+        clearTimeout(timeout);
+        isRunningRef.current = false;
+      };
     }
   }, [steps, runAnimation]);
 

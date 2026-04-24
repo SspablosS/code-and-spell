@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
 import GameCanvas from '../components/game/GameCanvas';
 import CodeEditor from '../components/game/CodeEditor';
@@ -28,15 +28,17 @@ export default function GamePage() {
     setLevel,
     setCode,
     setRunning,
+    setSteps,
+    setCompleted,
     applyStep,
     reset,
   } = useGameStore();
 
-  const handleStepApplied = (step: GameStep) => {
+  const handleStepApplied = useCallback((step: GameStep) => {
     applyStep(step);
-  };
+  }, [applyStep]);
 
-  const handleAnimationComplete = (completed: boolean) => {
+  const handleAnimationComplete = useCallback((completed: boolean) => {
     setRunning(false);
     if (completed) {
       // Сохранить прогресс
@@ -48,7 +50,7 @@ export default function GamePage() {
         });
       }
     }
-  };
+  }, [currentLevel, code, setRunning]);
 
   useGolemAnimation({
     steps,
@@ -102,7 +104,12 @@ export default function GamePage() {
     if (result.error) {
       setError(result.error);
       setRunning(false);
+      return;
     }
+
+    // Явно запускаем анимацию
+    setSteps(result.steps);
+    setCompleted(result.isCompleted);
   };
 
   const handleReset = () => {
