@@ -85,6 +85,35 @@ export default function CodeEditor({ value, onChange, disabled }: CodeEditorProp
         theme="vs-dark"
         value={value}
         onChange={(newValue) => onChange(newValue || '')}
+        onMount={(editor, monaco) => {
+          editor.addCommand(monaco.KeyCode.Enter, () => {
+            const model = editor.getModel();
+            const position = editor.getPosition();
+            if (!model || !position) return;
+
+            const currentLine = model.getLineContent(position.lineNumber).trim();
+
+            if (currentLine.match(/^repeat \d+:$/)) {
+              editor.executeEdits('auto-indent', [
+                {
+                  range: new monaco.Range(
+                    position.lineNumber,
+                    position.column,
+                    position.lineNumber,
+                    position.column
+                  ),
+                  text: '\n    ',
+                },
+              ]);
+              editor.setPosition({
+                lineNumber: position.lineNumber + 1,
+                column: 5,
+              });
+            } else {
+              editor.trigger('keyboard', 'type', { text: '\n' });
+            }
+          });
+        }}
         options={{
           fontSize: 14,
           fontFamily: "'Fira Code', monospace",
