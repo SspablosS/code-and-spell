@@ -21,21 +21,32 @@ services:
       - code-spell-network
 
   backend:
-    build: ../server
+    build:
+      context: ..
+      dockerfile: server/Dockerfile
     ports:
       - "3001:3001"
-    env_file:
-      - ../.env
+    environment:
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/code_and_spell
+      JWT_SECRET: ${JWT_SECRET:-change_me_in_production}
+      JWT_EXPIRES_IN: ${JWT_EXPIRES_IN:-24h}
+      PORT: 3001
+      CLIENT_URL: http://localhost
+      SENTRY_DSN_SERVER: ${SENTRY_DSN_SERVER:-}
+      NODE_ENV: production
     depends_on:
       postgres:
         condition: service_healthy
+    command: sh -c "npx prisma migrate deploy && node dist/index.js"
     networks:
       - code-spell-network
 
   frontend:
-    build: ../client
+    build:
+      context: ..
+      dockerfile: client/Dockerfile
     ports:
-      - "5173:5173"
+      - "80:80"
     depends_on:
       - backend
     networks:
