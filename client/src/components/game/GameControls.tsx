@@ -1,6 +1,7 @@
 interface GameControlsProps {
   onRun: () => void;
   onReset: () => void;
+  onNextLevel: () => void;
   isRunning: boolean;
   isCompleted: boolean;
   isFailed: boolean;
@@ -10,6 +11,7 @@ interface GameControlsProps {
 export default function GameControls({
   onRun,
   onReset,
+  onNextLevel,
   isRunning,
   isCompleted,
   isFailed,
@@ -77,7 +79,7 @@ export default function GameControls({
               fontWeight: 600,
               cursor: 'pointer',
             }}
-            onClick={onReset}
+            onClick={onNextLevel}
           >
             Дальше →
           </button>

@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import GameCanvas from '../components/game/GameCanvas';
 import CodeEditor from '../components/game/CodeEditor';
 import GameControls from '../components/game/GameControls';
@@ -13,8 +13,11 @@ import type { GameStep } from '../types';
 
 export default function GamePage() {
   const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [restartMessage, setRestartMessage] = useState<string | null>(null);
+  const [animationSteps, setAnimationSteps] = useState<GameStep[]>([]);
 
   const {
     currentLevel,
@@ -24,12 +27,11 @@ export default function GamePage() {
     isCompleted,
     isFailed,
     errorMessage,
-    steps,
     setLevel,
     setCode,
     setRunning,
-    setSteps,
     setCompleted,
+    setGolemState,
     applyStep,
     reset,
   } = useGameStore();
@@ -40,7 +42,9 @@ export default function GamePage() {
 
   const handleAnimationComplete = useCallback((completed: boolean) => {
     setRunning(false);
+    setAnimationSteps([]);
     if (completed) {
+      setCompleted(true);
       // Сохранить прогресс
       if (currentLevel) {
         upsertProgress(currentLevel.id, {
@@ -49,11 +53,22 @@ export default function GamePage() {
           attemptsCount: 1,
         });
       }
+    } else {
+      // Автоматический рестарт если цель не достигнута
+      setTimeout(() => {
+        if (currentLevel) {
+          setGolemState(currentLevel.initialState.golem);
+          setRunning(false);
+          setCompleted(false);
+          setRestartMessage('Цель не достигнута. Попробуй ещё раз! 🔄');
+          setTimeout(() => setRestartMessage(null), 3000);
+        }
+      }, 600);
     }
-  }, [currentLevel, code, setRunning]);
+  }, [currentLevel, code, setRunning, setCompleted, setGolemState]);
 
   useGolemAnimation({
-    steps,
+    steps: animationSteps,
     isCompleted,
     onStepApplied: handleStepApplied,
     onAnimationComplete: handleAnimationComplete,
@@ -108,13 +123,24 @@ export default function GamePage() {
     }
 
     // Явно запускаем анимацию
-    setSteps(result.steps);
-    setCompleted(result.isCompleted);
+    setAnimationSteps(result.steps);
   };
 
   const handleReset = () => {
-    reset();
+    setAnimationSteps([]);
+    if (currentLevel) {
+      setGolemState(currentLevel.initialState.golem);
+    }
+    setRunning(false);
+    setCompleted(false);
     setError(null);
+  };
+
+  const handleNextLevel = () => {
+    if (currentLevel) {
+      const nextLevelId = currentLevel.id + 1;
+      navigate(`/level/${nextLevelId}`);
+    }
   };
 
   if (isLoading) {
@@ -231,11 +257,29 @@ export default function GamePage() {
           >
             Заклинание
           </div>
+          {restartMessage && (
+            <div
+              style={{
+                backgroundColor: 'rgba(248,113,113,0.15)',
+                border: '1px solid #f87171',
+                borderRadius: '10px',
+                padding: '12px 16px',
+                color: '#f87171',
+                fontWeight: 500,
+                marginBottom: '1rem',
+                textAlign: 'center',
+                animation: 'fadeIn 0.3s ease',
+              }}
+            >
+              {restartMessage}
+            </div>
+          )}
           <CodeEditor value={code} onChange={setCode} disabled={isRunning} />
           <div style={{ marginTop: '1rem' }}>
             <GameControls
               onRun={handleRun}
               onReset={handleReset}
+              onNextLevel={handleNextLevel}
               isRunning={isRunning}
               isCompleted={isCompleted}
               isFailed={isFailed}

@@ -43,15 +43,14 @@ export function useGolemAnimation({
   }, [steps, isCompleted, onStepApplied, onAnimationComplete]);
 
   useEffect(() => {
-    if (steps.length > 0) {
-      const timeout = setTimeout(() => {
-        runAnimation();
-      }, 0);
-      return () => {
-        clearTimeout(timeout);
-        isRunningRef.current = false;
-      };
-    }
+    if (!steps || steps.length === 0) return;
+    const timeout = setTimeout(() => {
+      runAnimation();
+    }, 0);
+    return () => {
+      clearTimeout(timeout);
+      isRunningRef.current = false;
+    };
   }, [steps, runAnimation]);
 
   return { isAnimating };
