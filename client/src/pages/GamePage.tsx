@@ -7,7 +7,7 @@ import HintsPanel from '../components/game/HintsPanel';
 import { useGameStore } from '../store/game.store';
 import { useGolemAnimation } from '../hooks/useGolemAnimation';
 import { getLevelById } from '../services/levels.service';
-import { upsertProgress } from '../services/progress.service';
+import { upsertProgress, getMyProgress } from '../services/progress.service';
 import { runCode } from '../interpreter';
 import type { GameStep } from '../types';
 
@@ -17,6 +17,7 @@ export default function GamePage() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [animationSteps, setAnimationSteps] = useState<GameStep[]>([]);
+  const [attemptsCount, setAttemptsCount] = useState(0);
 
   const {
     currentLevel,
@@ -38,7 +39,7 @@ export default function GamePage() {
     applyStep(step);
   }, [applyStep]);
 
-  const handleAnimationComplete = useCallback((completed: boolean) => {
+  const handleAnimationComplete = useCallback(async (completed: boolean) => {
     setRunning(false);
     setAnimationSteps([]);
 
@@ -48,12 +49,12 @@ export default function GamePage() {
 
     if (completed) {
       setCompleted(true);
-      // Сохранить прогресс
+      // Сохранить прогресс с победой
       if (currentLevel) {
-        upsertProgress(currentLevel.id, {
+        await upsertProgress(currentLevel.id, {
           isCompleted: true,
           bestSolution: code,
-          attemptsCount: 1,
+          attemptsCount: attemptsCount,
         });
       }
     } else if (hasError) {
@@ -77,7 +78,7 @@ export default function GamePage() {
         }
       }, 600);
     }
-  }, [currentLevel, code, setRunning, setCompleted, setGolemState, animationSteps]);
+  }, [currentLevel, code, setRunning, setCompleted, setGolemState, animationSteps, attemptsCount]);
 
   useGolemAnimation({
     steps: animationSteps,
@@ -96,6 +97,15 @@ export default function GamePage() {
         setLevel(response.level);
         setCode('');
         reset();
+
+        // Загружаем прогресс для текущего уровня
+        const progressResponse = await getMyProgress();
+        const levelProgress = progressResponse.progress.find(p => p.levelId === Number(id));
+        if (levelProgress) {
+          setAttemptsCount(levelProgress.attemptsCount);
+        } else {
+          setAttemptsCount(0);
+        }
       } catch {
         setError('Не удалось загрузить уровень');
       } finally {
@@ -113,12 +123,22 @@ export default function GamePage() {
     }
   }, [currentLevel, setGolemState]);
 
-  const handleRun = () => {
+  const handleRun = async () => {
     if (!currentLevel) return;
 
     setRunning(true);
     setError(null);
     setCompleted(false);
+
+    // Увеличиваем счётчик попыток СРАЗУ при запуске
+    const newAttempts = attemptsCount + 1;
+    setAttemptsCount(newAttempts);
+
+    // Сохраняем попытку немедленно (без isCompleted)
+    await upsertProgress(currentLevel.id, {
+      isCompleted: false,
+      attemptsCount: newAttempts,
+    });
 
     const levelContext = {
       gridSize: currentLevel.gridSize,
