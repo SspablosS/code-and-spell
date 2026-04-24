@@ -32,7 +32,7 @@ function executeInstructions(
               golemState: { ...golem },
               message: 'Голем упёрся в стену',
             });
-            // Не возвращаем ошибку сразу, продолжаем выполнение для анимации
+            return 'Голем упёрся в стену';
           } else {
             // Проверка препятствий
             const obstacleHit = context.obstacles.some((obs) => obs.x === newX && obs.y === newY);
@@ -42,7 +42,7 @@ function executeInstructions(
                 golemState: { ...golem },
                 message: 'Голем упёрся в препятствие',
               });
-              // Не возвращаем ошибку сразу, продолжаем выполнение для анимации
+              return 'Голем упёрся в препятствие';
             } else {
               golem = { ...golem, x: newX, y: newY };
               result.push({ type: 'move', golemState: { ...golem } });
@@ -76,7 +76,7 @@ function executeInstructions(
               golemState: { ...golem },
               message: 'Здесь нечего собирать',
             });
-            // Не возвращаем ошибку сразу, продолжаем выполнение для анимации
+            return 'Здесь нечего собирать';
           }
         }
       } else if (instruction.type === 'repeat') {
@@ -96,13 +96,10 @@ function executeInstructions(
 
   const error = execute(instructions);
 
-  const lastStep = result[result.length - 1];
   const isCompleted =
     !error &&
     golem.x === context.crystal.x &&
-    golem.y === context.crystal.y &&
-    lastStep?.type === 'collect' &&
-    lastStep?.success === true;
+    golem.y === context.crystal.y;
 
   return {
     steps: result,
