@@ -31,7 +31,8 @@ const envSchema = z.object({
   JWT_EXPIRES_IN: z.string().min(1).default("24h"),
   PORT: z.coerce.number().int().positive().default(3001),
   CLIENT_URL: z.string().min(1),
-  SENTRY_DSN_SERVER: z.string().optional().default("")
+  SENTRY_DSN_SERVER: z.string().optional().default(""),
+  NODE_ENV: z.string().default("development")
 });
 
 export const env = envSchema.parse(process.env);

@@ -4,12 +4,16 @@ import express from "express";
 import helmet from "helmet";
 
 import { env } from "./config/env";
+import { initSentry } from "./config/sentry";
 import { errorHandler } from "./middleware/errorHandler.middleware";
 import { authRouter } from "./routes/auth.routes";
 import { commandsRouter } from "./routes/commands.routes";
 import { levelsRouter } from "./routes/levels.routes";
 import { progressRouter } from "./routes/progress.routes";
 import { usersRouter } from "./routes/users.routes";
+
+// Инициализируем Sentry если настроен
+initSentry();
 
 const app = express();
 

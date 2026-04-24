@@ -13,7 +13,8 @@
   "dependencies": {
     "@fontsource-variable/inter": "^5.2.8",
     "@monaco-editor/react": "^4.7.0",
-    "@sentry/react": "^10.11.0",
+    "@sentry/react": "^10.50.0",
+    "@sentry/tracing": "^7.120.4",
     "axios": "^1.12.2",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
