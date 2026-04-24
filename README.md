@@ -1,5 +1,7 @@
 # Code & Spell
 
+[![CI](https://github.com/SspablosS/code-and-spell/actions/workflows/ci.yml/badge.svg)](https://github.com/SspablosS/code-and-spell/actions/workflows/ci.yml)
+
 ## Setup
 
 - Требования: Node.js 18+, npm
