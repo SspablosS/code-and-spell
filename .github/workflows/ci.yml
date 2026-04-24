@@ -12,41 +12,67 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [18.x]
+        node-version: [20.x]
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Setup Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
-          node-version: ${{ matrix.node-version }}
-          cache: 'npm'
+          node-version: '20.x'
 
-      - name: Install dependencies (root)
+      - name: Install client deps
+        working-directory: client
         run: npm ci
 
-      - name: Install dependencies (client)
-        working-directory: ./client
+      - name: Install server deps
+        working-directory: server
         run: npm ci
 
-      - name: Install dependencies (server)
-        working-directory: ./server
-        run: npm ci
-
-      - name: Lint (server)
-        working-directory: ./server
+      - name: Lint server (TypeScript check)
+        working-directory: server
         run: npm run lint
 
-      - name: Build (client)
-        working-directory: ./client
+      - name: Build client
+        working-directory: client
         run: npm run build
 
-      - name: Build (server)
-        working-directory: ./server
+      - name: Build server
+        working-directory: server
         run: npm run build
 
-      - name: Run tests (server)
-        working-directory: ./server
+  test-frontend:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+
+      - name: Install deps
+        working-directory: client
+        run: npm ci
+
+      - name: Run frontend tests
+        working-directory: client
+        run: npm test -- --run
+
+  test-backend:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+
+      - name: Install deps
+        working-directory: server
+        run: npm ci
+
+      - name: Run backend tests
+        working-directory: server
         run: npm test
