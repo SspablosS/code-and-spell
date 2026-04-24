@@ -35,7 +35,9 @@ jobs:
 
       - name: Build client
         working-directory: client
-        run: npm run build
+        run: |
+          npm install --include=dev
+          npm run build
 
       - name: Build server
         working-directory: server
@@ -88,14 +90,16 @@ jobs:
         working-directory: server
         run: npm ci
 
-      - name: Run migrations
+      - name: Run migrations and seed
         working-directory: server
         env:
           DATABASE_URL: postgresql://postgres:postgres@localhost:5432/code_and_spell_test
           JWT_SECRET: test_secret_for_ci
           CLIENT_URL: http://localhost:5173
           NODE_ENV: test
-        run: npx prisma migrate deploy
+        run: |
+          npx prisma migrate deploy
+          npx prisma db seed
 
       - name: Run backend tests
         working-directory: server
