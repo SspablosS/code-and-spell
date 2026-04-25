@@ -24,6 +24,7 @@ CREATE TABLE "Level" (
     "difficulty" "Difficulty" NOT NULL,
     "orderIndex" INTEGER NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "hints" TEXT[],
 
     CONSTRAINT "Level_pkey" PRIMARY KEY ("id")
 );

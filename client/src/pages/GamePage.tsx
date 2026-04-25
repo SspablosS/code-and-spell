@@ -267,7 +267,7 @@ export default function GamePage() {
           >
             <GameCanvas level={currentLevel} golemState={golemState} isAnimating={isRunning} />
           </div>
-          <HintsPanel hints={[]} />
+          <HintsPanel hints={currentLevel.hints || []} />
         </div>
 
         {/* Правая колонка: редактор + контролы */}

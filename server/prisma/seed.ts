@@ -91,7 +91,8 @@ async function seedLevels() {
         initialState: level.initialState as any,
         goalState: level.goal as any,
         difficulty,
-        orderIndex: level.id
+        orderIndex: level.id,
+        hints: level.hints
       },
       create: {
         id: level.id,
@@ -101,7 +102,8 @@ async function seedLevels() {
         initialState: level.initialState as any,
         goalState: level.goal as any,
         difficulty,
-        orderIndex: level.id
+        orderIndex: level.id,
+        hints: level.hints
       }
     });
   }

@@ -34,6 +34,7 @@ model Level {
   difficulty   Difficulty
   orderIndex   Int
   createdAt    DateTime       @default(now())
+  hints        String[]
 
   progress     UserProgress[]
 

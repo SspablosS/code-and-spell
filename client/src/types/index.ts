@@ -12,9 +12,11 @@ export interface Level {
   gridSize: number;
   initialState: LevelInitialState;
   goalState: LevelGoalState;
+  goal: LevelGoal;
   difficulty?: 'easy' | 'medium' | 'hard';
   orderIndex: number;
   createdAt: Date;
+  hints?: string[];
 }
 
 export interface LevelInitialState {
