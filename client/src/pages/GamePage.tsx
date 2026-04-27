@@ -18,6 +18,7 @@ export default function GamePage() {
   const [error, setError] = useState<string | null>(null);
   const [animationSteps, setAnimationSteps] = useState<GameStep[]>([]);
   const [attemptsCount, setAttemptsCount] = useState(0);
+  const [showTutorial, setShowTutorial] = useState(false);
 
   const {
     currentLevel,
@@ -106,6 +107,12 @@ export default function GamePage() {
     if (currentLevel) {
       // Установить golemState из initialState уровня
       setGolemState(currentLevel.initialState.golem);
+
+      // Показать туториал только на уровне 1 и если не был показан
+      const tutorialShown = localStorage.getItem('tutorial_shown');
+      if (currentLevel.id === 1 && !tutorialShown) {
+        setShowTutorial(true);
+      }
     }
   }, [currentLevel, setGolemState]);
 
@@ -170,6 +177,11 @@ export default function GamePage() {
     }
   };
 
+  const handleCloseTutorial = () => {
+    localStorage.setItem('tutorial_shown', 'true');
+    setShowTutorial(false);
+  };
+
   if (isLoading) {
     return (
       <div
@@ -213,6 +225,115 @@ export default function GamePage() {
 
   return (
     <div style={{ padding: '2rem 1.5rem' }}>
+      {/* Tutorial Overlay */}
+      {showTutorial && (
+        <div
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: 'rgba(0, 0, 0, 0.85)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 9999,
+          }}
+        >
+          <div
+            style={{
+              background: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 100%)',
+              border: '2px solid #6c63ff',
+              borderRadius: '16px',
+              padding: '2.5rem',
+              maxWidth: '500px',
+              boxShadow: '0 0 40px rgba(108, 99, 255, 0.3)',
+            }}
+          >
+            <h2
+              style={{
+                fontFamily: 'Cinzel, serif',
+                fontSize: '1.75rem',
+                color: '#fbbf24',
+                marginBottom: '1.5rem',
+                textAlign: 'center',
+              }}
+            >
+              Добро пожаловать, маг! 🧙
+            </h2>
+            <p
+              style={{
+                color: '#e0e7ff',
+                fontSize: '1rem',
+                lineHeight: '1.8',
+                marginBottom: '1.5rem',
+              }}
+            >
+              Ты управляешь големом с помощью кода.
+              Пиши команды в редакторе справа и нажимай Запустить.
+            </p>
+            <div
+              style={{
+                background: 'rgba(108, 99, 255, 0.1)',
+                border: '1px solid rgba(108, 99, 255, 0.3)',
+                borderRadius: '12px',
+                padding: '1.25rem',
+                marginBottom: '1.5rem',
+              }}
+            >
+              <div
+                style={{
+                  color: '#94a3b8',
+                  fontSize: '0.85rem',
+                  marginBottom: '0.75rem',
+                  fontWeight: 500,
+                }}
+              >
+                Доступные команды:
+              </div>
+              <div style={{ color: '#e0e7ff', fontSize: '0.9rem', lineHeight: '1.6' }}>
+                <div>move() — шаг вперёд</div>
+                <div>turn_left() — поворот налево</div>
+                <div>turn_right() — поворот направо</div>
+                <div style={{ marginTop: '0.5rem' }}>
+                  repeat N: — повтори N раз
+                </div>
+                <div style={{ marginLeft: '1rem', color: '#94a3b8' }}>
+                  команда()
+                </div>
+              </div>
+            </div>
+            <button
+              onClick={handleCloseTutorial}
+              style={{
+                width: '100%',
+                padding: '1rem 2rem',
+                background: 'linear-gradient(135deg, #6c63ff, #a855f7)',
+                color: 'white',
+                border: 'none',
+                borderRadius: '10px',
+                fontSize: '1rem',
+                fontWeight: 600,
+                cursor: 'pointer',
+                boxShadow: '0 4px 20px rgba(108, 99, 255, 0.4)',
+                transition: 'all 0.3s',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = 'translateY(-2px)';
+                e.currentTarget.style.boxShadow = '0 8px 30px rgba(108, 99, 255, 0.6)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = 'translateY(0)';
+                e.currentTarget.style.boxShadow = '0 4px 20px rgba(108, 99, 255, 0.4)';
+              }}
+            >
+              Понятно, начинаем!
+            </button>
+          </div>
+        </div>
+      )}
+
       <div style={{ marginBottom: '1.5rem' }}>
         <h1
           style={{
