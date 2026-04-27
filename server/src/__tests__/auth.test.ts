@@ -10,14 +10,10 @@ describe('Auth API', () => {
   });
 
   afterAll(async () => {
-    await prisma.$disconnect();
-  });
-
-  beforeEach(async () => {
-    // Очистка перед каждым тестом — только тестовых пользователей
     await prisma.user.deleteMany({
       where: { email: { contains: 'test' } }
     });
+    await prisma.$disconnect();
   });
 
   const testUser = {
@@ -27,6 +23,11 @@ describe('Auth API', () => {
   };
 
   describe('POST /api/auth/register', () => {
+    beforeEach(async () => {
+      // Очищаем только перед тестами регистрации
+      await prisma.user.deleteMany({ where: { email: testUser.email } });
+    });
+
     it('should register a new user successfully', async () => {
       const response = await request(app)
         .post('/api/auth/register')
@@ -39,13 +40,13 @@ describe('Auth API', () => {
     });
 
     it('should return 400 for duplicate email', async () => {
-      // Первая регистрация
+      // Сначала создаём пользователя
       await request(app)
         .post('/api/auth/register')
         .send(testUser)
         .expect(201);
 
-      // Вторая регистрация с тем же email
+      // Потом пробуем снова
       const response = await request(app)
         .post('/api/auth/register')
         .send(testUser)
@@ -71,11 +72,16 @@ describe('Auth API', () => {
   });
 
   describe('POST /api/auth/login', () => {
-    beforeEach(async () => {
-      // Регистрируем пользователя перед тестами логина
+    beforeAll(async () => {
+      // Создаём пользователя один раз для всех login тестов
+      await prisma.user.deleteMany({ where: { email: testUser.email } });
       await request(app)
         .post('/api/auth/register')
         .send(testUser);
+    });
+
+    afterAll(async () => {
+      await prisma.user.deleteMany({ where: { email: testUser.email } });
     });
 
     it('should login successfully with valid credentials', async () => {
@@ -106,12 +112,12 @@ describe('Auth API', () => {
   describe('GET /api/auth/me', () => {
     let authToken: string;
 
-    beforeEach(async () => {
-      // Регистрируем и логинимся перед тестами
+    beforeAll(async () => {
+      await prisma.user.deleteMany({ where: { email: testUser.email } });
       await request(app)
         .post('/api/auth/register')
         .send(testUser);
-
+      
       const loginResponse = await request(app)
         .post('/api/auth/login')
         .send({
@@ -120,7 +126,11 @@ describe('Auth API', () => {
         });
 
       const cookieHeader = loginResponse.headers['set-cookie'];
-      authToken = cookieHeader ? cookieHeader[0] : '';
+      authToken = cookieHeader ? cookieHeader[0].split(';')[0] : '';
+    });
+
+    afterAll(async () => {
+      await prisma.user.deleteMany({ where: { email: testUser.email } });
     });
 
     it('should return 401 without cookie', async () => {
