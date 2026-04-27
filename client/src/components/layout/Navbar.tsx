@@ -34,7 +34,8 @@ export function Navbar() {
 
   const logoStyle = {
     fontFamily: 'Cinzel, serif',
-    fontSize: '1.3rem',
+    fontSize: '1.5rem',
+    fontWeight: 700,
     color: '#fbbf24',
     textDecoration: 'none' as const,
     display: 'flex',
@@ -43,14 +44,14 @@ export function Navbar() {
   };
 
   const logoIconStyle = {
-    width: '36px',
-    height: '36px',
+    width: '40px',
+    height: '40px',
     background: 'linear-gradient(135deg, #6c63ff, #a855f7)',
-    borderRadius: '8px',
+    borderRadius: '10px',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    fontSize: '20px',
+    fontSize: '24px',
     boxShadow: '0 0 15px rgba(108,99,255,0.5)',
   };
 
