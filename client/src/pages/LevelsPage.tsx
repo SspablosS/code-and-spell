@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import LevelCard from '../components/levels/LevelCard';
+import { LoadingSpinner } from '../components/ui/LoadingSpinner';
 import { getLevels } from '../services/levels.service';
 import { getMyProgress } from '../services/progress.service';
 import type { Level, UserProgress } from '../types';
@@ -38,27 +39,8 @@ export default function LevelsPage() {
 
   if (isLoading) {
     return (
-      <div style={{ padding: '2rem 1.5rem' }}>
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(3, 1fr)',
-            gap: '1.25rem',
-          }}
-        >
-          {[1, 2, 3].map((i) => (
-            <div
-              key={i}
-              style={{
-                backgroundColor: '#16213E',
-                borderRadius: '14px',
-                height: '200px',
-                border: '1px solid #2a3a6a',
-                animation: 'pulse 1.5s infinite',
-              }}
-            />
-          ))}
-        </div>
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh' }}>
+        <LoadingSpinner />
       </div>
     );
   }

@@ -1,18 +1,25 @@
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../store/auth.store';
+import { logout } from '../services/auth.service';
 
 export default function LandingPage() {
   const navigate = useNavigate();
   const user = useAuthStore((state) => state.user);
+  const authLogout = useAuthStore((state) => state.logout);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [particles, setParticles] = useState<{ id: number; left: number; animationDelay: number; animationDuration: number }[]>([]);
 
-  useEffect(() => {
-    if (user) {
-      navigate('/levels');
+  async function handleLogout() {
+    try {
+      await logout();
+      authLogout();
+      navigate('/login');
+    } catch {
+      authLogout();
+      navigate('/login');
     }
-  }, [user, navigate]);
+  }
 
   // Three.js Golem Animation
   useEffect(() => {
@@ -664,12 +671,25 @@ export default function LandingPage() {
         </a>
 
         <div className="header-buttons">
-          <button className="btn btn-outline" onClick={() => navigate('/login')}>
-            Войти
-          </button>
-          <button className="btn btn-primary" onClick={() => navigate('/register')}>
-            Начать обучение
-          </button>
+          {user ? (
+            <>
+              <button className="btn btn-outline" onClick={() => navigate('/levels')}>
+                Продолжить игру
+              </button>
+              <button className="btn btn-primary" onClick={handleLogout}>
+                Выйти
+              </button>
+            </>
+          ) : (
+            <>
+              <button className="btn btn-outline" onClick={() => navigate('/login')}>
+                Войти
+              </button>
+              <button className="btn btn-primary" onClick={() => navigate('/register')}>
+                Начать обучение
+              </button>
+            </>
+          )}
         </div>
       </header>
 
@@ -686,12 +706,25 @@ export default function LandingPage() {
           </p>
 
           <div className="hero-buttons">
-            <button className="btn btn-magic" onClick={() => navigate('/register')}>
-              🎮 Начать Приключение
-            </button>
-            <button className="btn btn-outline" onClick={() => navigate('/register')}>
-              Узнать больше
-            </button>
+            {user ? (
+              <>
+                <button className="btn btn-magic" onClick={() => navigate('/levels')}>
+                  🎮 Продолжить игру
+                </button>
+                <button className="btn btn-outline" onClick={handleLogout}>
+                  Выйти
+                </button>
+              </>
+            ) : (
+              <>
+                <button className="btn btn-magic" onClick={() => navigate('/register')}>
+                  🎮 Начать Приключение
+                </button>
+                <button className="btn btn-outline" onClick={() => navigate('/login')}>
+                  Войти
+                </button>
+              </>
+            )}
           </div>
 
           <div className="stats">

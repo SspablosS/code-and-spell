@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Navigate, Route, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 
 import GamePage from './pages/GamePage';
 import LandingPage from './pages/LandingPage';
@@ -15,7 +15,6 @@ import { useAuthStore } from './store/auth.store';
 import { me } from './services/auth.service';
 
 export default function App() {
-  const user = useAuthStore((state) => state.user);
   const setUser = useAuthStore((state) => state.setUser);
   const [isInitializing, setIsInitializing] = useState(true);
 
@@ -45,10 +44,7 @@ export default function App() {
 
   return (
     <Routes>
-      <Route
-        path="/"
-        element={user ? <Navigate to="/levels" replace /> : <LandingPage />}
-      />
+      <Route path="/" element={<LandingPage />} />
       <Route path="/login" element={<LoginPage />} />
       <Route path="/register" element={<RegisterPage />} />
       <Route
