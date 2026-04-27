@@ -334,7 +334,7 @@ export default function GamePage() {
         </div>
       )}
 
-      <div style={{ marginBottom: '1.5rem' }}>
+      <div style={{ marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '1rem' }}>
         <h1
           style={{
             color: 'white',
@@ -344,18 +344,33 @@ export default function GamePage() {
         >
           {currentLevel.title}
         </h1>
-        {currentLevel.description && (
-          <p
-            style={{
-              color: '#94a3b8',
-              fontSize: '0.9rem',
-              marginTop: '0.25rem',
-            }}
-          >
-            {currentLevel.description}
-          </p>
-        )}
+        <button
+          onClick={() => setShowTutorial(true)}
+          style={{
+            backgroundColor: 'transparent',
+            border: '1px solid rgba(108,99,255,0.4)',
+            color: '#a78bfa',
+            borderRadius: '8px',
+            padding: '6px 14px',
+            fontSize: '0.85rem',
+            cursor: 'pointer',
+          }}
+        >
+          📖 Туториал
+        </button>
       </div>
+      {currentLevel.description && (
+        <p
+          style={{
+            color: '#94a3b8',
+            fontSize: '0.9rem',
+            marginTop: '-1rem',
+            marginBottom: '1.5rem',
+          }}
+        >
+          {currentLevel.description}
+        </p>
+      )}
 
       <div
         style={{
