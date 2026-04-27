@@ -182,6 +182,29 @@ export default function GamePage() {
     setShowTutorial(false);
   };
 
+  const levelLessons: Record<number, { concept: string; example: string }> = {
+    1: {
+      concept: "🧠 Концепция: Последовательность",
+      example: "Компьютер выполняет команды строго по порядку, сверху вниз",
+    },
+    2: {
+      concept: "🧠 Концепция: Направление",
+      example: "Голем движется туда куда смотрит. Сначала повернись, потом иди",
+    },
+    3: {
+      concept: "🧠 Концепция: Планирование",
+      example: "Перед написанием кода — продумай маршрут глазами",
+    },
+    4: {
+      concept: "🧠 Концепция: Цикл (repeat)",
+      example: "repeat 3:\n    move()\nзначит выполнить move() три раза",
+    },
+    5: {
+      concept: "🧠 Концепция: Алгоритм",
+      example: "Алгоритм — точная последовательность шагов для решения задачи",
+    },
+  };
+
   if (isLoading) {
     return (
       <div
@@ -370,6 +393,38 @@ export default function GamePage() {
         >
           {currentLevel.description}
         </p>
+      )}
+      {currentLevel?.id && levelLessons[currentLevel.id] && (
+        <div
+          style={{
+            backgroundColor: 'rgba(108,99,255,0.08)',
+            border: '1px solid rgba(108,99,255,0.2)',
+            borderRadius: '10px',
+            padding: '0.75rem 1rem',
+            marginBottom: '1rem',
+          }}
+        >
+          <div
+            style={{
+              color: '#a78bfa',
+              fontWeight: 600,
+              fontSize: '0.9rem',
+              marginBottom: '0.25rem',
+            }}
+          >
+            {levelLessons[currentLevel.id].concept}
+          </div>
+          <div
+            style={{
+              color: '#94a3b8',
+              fontSize: '0.85rem',
+              fontFamily: 'Fira Code, monospace',
+              whiteSpace: 'pre-line',
+            }}
+          >
+            {levelLessons[currentLevel.id].example}
+          </div>
+        </div>
       )}
 
       <div
