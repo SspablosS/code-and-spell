@@ -7,7 +7,7 @@ interface GameCanvasProps {
   isAnimating: boolean;
 }
 
-const CELL_SIZE = 52;
+const CELL_SIZE = 72;
 const GRID_COLOR_1 = '#1e2a4a';
 const GRID_COLOR_2 = '#1a2240';
 const GRID_STROKE = '#2a3a6a';

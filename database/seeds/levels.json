@@ -2,7 +2,7 @@
   {
     "id": 1,
     "title": "Первое заклинание",
-    "gridSize": 10,
+    "gridSize": 6,
     "initialState": {
       "golem": { "x": 0, "y": 0, "direction": "east" },
       "crystal": { "x": 3, "y": 0 },
@@ -18,7 +18,7 @@
   {
     "id": 2,
     "title": "Поворот",
-    "gridSize": 10,
+    "gridSize": 6,
     "initialState": {
       "golem": { "x": 0, "y": 0, "direction": "north" },
       "crystal": { "x": 1, "y": 0 },
@@ -34,7 +34,7 @@
   {
     "id": 3,
     "title": "Лабиринт",
-    "gridSize": 10,
+    "gridSize": 6,
     "initialState": {
       "golem": { "x": 0, "y": 2, "direction": "east" },
       "crystal": { "x": 4, "y": 0 },
@@ -55,10 +55,10 @@
   {
     "id": 4,
     "title": "Сила повторения",
-    "gridSize": 10,
+    "gridSize": 6,
     "initialState": {
       "golem": { "x": 0, "y": 0, "direction": "east" },
-      "crystal": { "x": 6, "y": 0 },
+      "crystal": { "x": 5, "y": 0 },
       "obstacles": []
     },
     "goal": { "type": "reach", "target": "crystal" },
@@ -71,7 +71,7 @@
   {
     "id": 5,
     "title": "Мастер голема",
-    "gridSize": 10,
+    "gridSize": 6,
     "initialState": {
       "golem": { "x": 0, "y": 0, "direction": "east" },
       "crystal": { "x": 5, "y": 2 },

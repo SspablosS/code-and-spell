@@ -360,7 +360,7 @@ export default function GamePage() {
       <div
         style={{
           display: 'grid',
-          gridTemplateColumns: '1fr 1fr',
+          gridTemplateColumns: 'auto 1fr',
           gap: '1.5rem',
           alignItems: 'start',
         }}
