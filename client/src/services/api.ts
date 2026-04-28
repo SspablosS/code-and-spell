@@ -6,6 +6,16 @@ const api = axios.create({
   withCredentials: true,
 });
 
+// Warmup функция
+export async function warmupServer() {
+  try {
+    await api.get('/health');
+    console.log('Server is awake');
+  } catch {
+    // сервер спит или недоступен — игнорируем
+  }
+}
+
 // Типизированные обёртки
 export async function get<T>(url: string, params?: Record<string, unknown>) {
   const response = await api.get<T>(url, { params });

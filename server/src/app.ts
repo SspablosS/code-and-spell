@@ -17,6 +17,15 @@ initSentry();
 
 const app = express();
 
+// Health check endpoint - ПЕРЕД всеми остальными middleware
+app.get('/api/health', (req, res) => {
+  res.json({
+    status: 'ok',
+    timestamp: new Date().toISOString(),
+    version: '1.0.0'
+  })
+})
+
 app.use(helmet());
 app.use(
   cors({

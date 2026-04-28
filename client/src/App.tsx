@@ -13,12 +13,15 @@ import { LoadingSpinner } from './components/ui/LoadingSpinner';
 import { Layout } from './components/layout/Layout';
 import { useAuthStore } from './store/auth.store';
 import { me } from './services/auth.service';
+import { warmupServer } from './services/api';
 
 export default function App() {
   const setUser = useAuthStore((state) => state.setUser);
   const [isInitializing, setIsInitializing] = useState(true);
 
   useEffect(() => {
+    warmupServer(); // будим сервер пока юзер смотрит на лендинг
+    
     async function checkSession() {
       try {
         const response = await me();
