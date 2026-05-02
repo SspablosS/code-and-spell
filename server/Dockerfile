@@ -4,7 +4,8 @@ WORKDIR /app
 COPY package.json package-lock.json ./
 COPY server/package.json ./server/package.json
 
-RUN npm ci -w server
+
+RUN npm ci -w server --install-strategy=nested
 
 COPY server/ ./server/
 
