@@ -1,13 +1,14 @@
 FROM node:20-alpine AS builder
-WORKDIR /app/server
+WORKDIR /app
 
 COPY package-lock.json ./
-COPY server/package.json ./package.json
+COPY server/package.json ./server/package.json
 
-RUN npm ci
+RUN cd server && npm ci
 
-COPY server/ ./
+COPY server/ ./server/
 
+WORKDIR /app/server
 RUN npx prisma generate
 RUN npm run build
 
