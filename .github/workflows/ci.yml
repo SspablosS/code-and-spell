@@ -98,6 +98,8 @@ jobs:
           CLIENT_URL: http://localhost:5173
           NODE_ENV: test
         run: |
+          npx prisma generate
+          npm run build
           npx prisma migrate deploy
           npx prisma db seed
 
