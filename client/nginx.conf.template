@@ -1,7 +1,8 @@
 server {
     listen 80;
 
-    resolver 1.1.1.1 valid=30s;
+    # DNS из /etc/resolv.conf контейнера (задаётся entrypoint образа nginx: NGINX_LOCAL_RESOLVERS)
+    resolver ${NGINX_LOCAL_RESOLVERS} valid=30s;
 
     location / {
         root /usr/share/nginx/html;
@@ -10,7 +11,7 @@ server {
     }
 
     location /api {
-        set $backend_upstream http://code-and-spell.railway.internal:3001;
+        set $backend_upstream http://${BACKEND_HOST}:${BACKEND_PORT};
         proxy_pass $backend_upstream;
         proxy_http_version 1.1;
         proxy_set_header Host $host;

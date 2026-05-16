@@ -40,6 +40,9 @@ services:
       dockerfile: client/Dockerfile
     ports:
       - "80:80"
+    environment:
+      BACKEND_HOST: backend
+      BACKEND_PORT: "3001"
     depends_on:
       - backend
 
