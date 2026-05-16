@@ -197,7 +197,7 @@ export default function GamePage() {
     },
     4: {
       concept: "🧠 Концепция: Цикл (repeat)",
-      example: "repeat 3:\n    move()\nзначит выполнить move() три раза",
+      example: "repeat 3:\n    move()\n\nзначит выполнить move() три раза",
     },
     5: {
       concept: "🧠 Концепция: Алгоритм",
@@ -317,6 +317,7 @@ export default function GamePage() {
               </div>
               <div style={{ color: '#e0e7ff', fontSize: '0.9rem', lineHeight: '1.6' }}>
                 <div>move() — шаг вперёд</div>
+                <div>collect() — сбор предмета</div>
                 <div>turn_left() — поворот налево</div>
                 <div>turn_right() — поворот направо</div>
                 <div style={{ marginTop: '0.5rem' }}>
@@ -419,7 +420,7 @@ export default function GamePage() {
               color: '#94a3b8',
               fontSize: '0.85rem',
               fontFamily: 'Fira Code, monospace',
-              whiteSpace: 'pre-line',
+              whiteSpace: 'pre-wrap',
             }}
           >
             {levelLessons[currentLevel.id].example}
