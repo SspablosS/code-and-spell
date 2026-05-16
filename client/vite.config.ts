@@ -12,6 +12,7 @@ export default defineConfig({
     },
   },
   server: {
+    // Только для локальной разработки; в production запросы идут на /api через nginx
     proxy: {
       '/api': 'http://localhost:3001',
     },
