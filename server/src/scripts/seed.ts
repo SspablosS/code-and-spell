@@ -14,9 +14,20 @@ type SeedLevel = {
 
 const prisma = new PrismaClient();
 
+function resolveLevelsPath(): string {
+  const candidates = [
+    path.join(process.cwd(), "database", "seeds", "levels.json"),
+    path.join(process.cwd(), "..", "database", "seeds", "levels.json"),
+  ];
+  const found = candidates.find((p) => fs.existsSync(p));
+  if (!found) {
+    throw new Error(`levels.json not found. Tried: ${candidates.join(", ")}`);
+  }
+  return found;
+}
+
 function readLevels(): SeedLevel[] {
-  const levelsPath = path.resolve(__dirname, "..", "..", "database", "seeds", "levels.json");
-  const raw = fs.readFileSync(levelsPath, "utf8");
+  const raw = fs.readFileSync(resolveLevelsPath(), "utf8");
   return JSON.parse(raw) as SeedLevel[];
 }
 
@@ -126,4 +137,3 @@ main()
     await prisma.$disconnect();
     process.exit(1);
   });
-
