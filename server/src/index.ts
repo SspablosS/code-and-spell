@@ -2,7 +2,10 @@ import { logger } from "./config/logger";
 import { env } from "./config/env";
 import app from "./app";
 
-app.listen(env.PORT, () => {
-  logger.info(`Server started on port ${env.PORT}`);
+const HOST = "0.0.0.0";
+const PORT = env.PORT;
+
+app.listen(PORT, HOST, () => {
+  logger.info(`Server started on http://${HOST}:${PORT}`);
 });
 
