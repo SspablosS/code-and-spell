@@ -1,16 +1,20 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuthStore } from '@/store/auth.store';
 import { login } from '@/services/auth.service';
 import { loginSchema } from '@/schemas/auth.schemas';
+import GoogleSignInButton, { getOAuthErrorMessage } from '@/components/auth/GoogleSignInButton';
 
 export default function LoginPage() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const setUser = useAuthStore((state) => state.setUser);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(
+    () => getOAuthErrorMessage(searchParams.get('error')),
+  );
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -135,6 +139,22 @@ export default function LoginPage() {
             </p>
           )}
         </form>
+
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.75rem',
+            marginTop: '1.25rem',
+            marginBottom: '0.25rem',
+          }}
+        >
+          <div style={{ flex: 1, height: 1, backgroundColor: 'rgba(148,163,184,0.25)' }} />
+          <span style={{ color: '#64748b', fontSize: '0.8rem' }}>или</span>
+          <div style={{ flex: 1, height: 1, backgroundColor: 'rgba(148,163,184,0.25)' }} />
+        </div>
+
+        <GoogleSignInButton />
 
         <p
           style={{

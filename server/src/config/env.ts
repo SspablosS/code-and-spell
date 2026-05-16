@@ -31,6 +31,8 @@ const envSchema = z.object({
   JWT_EXPIRES_IN: z.string().min(1).default("24h"),
   PORT: z.coerce.number().int().positive().default(3001),
   CLIENT_URL: z.string().min(1),
+  GOOGLE_CLIENT_ID: z.string().optional().default(""),
+  GOOGLE_CLIENT_SECRET: z.string().optional().default(""),
   SENTRY_DSN_SERVER: z.string().optional().default(""),
   NODE_ENV: z.string().default("development")
 });

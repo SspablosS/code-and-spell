@@ -54,6 +54,10 @@ export async function login(req: Request, res: Response) {
     return res.status(401).json({ error: "Invalid credentials" });
   }
 
+  if (!user.passwordHash) {
+    return res.status(401).json({ error: "This account uses Google sign-in" });
+  }
+
   const ok = await bcrypt.compare(password, user.passwordHash);
   if (!ok) {
     return res.status(401).json({ error: "Invalid credentials" });

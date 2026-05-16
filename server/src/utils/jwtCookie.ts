@@ -30,7 +30,8 @@ export function getAuthCookieOptions(): CookieOptions {
   return {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
-    sameSite: "strict",
+    // lax: cookie ставится после редиректа с Google (cross-site navigation)
+    sameSite: "lax",
     maxAge: jwtExpiresInToMaxAgeMs(env.JWT_EXPIRES_IN)
   };
 }
@@ -52,6 +53,6 @@ export function clearAuthCookie(res: Response) {
   res.clearCookie("token", {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
-    sameSite: "strict"
+    sameSite: "lax"
   });
 }
