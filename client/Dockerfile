@@ -19,5 +19,7 @@ ENV BACKEND_HOST=code-and-spell.railway.internal
 ENV BACKEND_PORT=3001
 
 COPY --from=builder /app/client/dist /usr/share/nginx/html
-COPY client/nginx.conf.template /etc/nginx/templates/default.conf.template
+COPY client/docker-entrypoint.d/99-generate-nginx-conf.sh /docker-entrypoint.d/99-generate-nginx-conf.sh
+RUN chmod +x /docker-entrypoint.d/99-generate-nginx-conf.sh
+
 EXPOSE 80
