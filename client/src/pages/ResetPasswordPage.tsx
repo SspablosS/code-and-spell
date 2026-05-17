@@ -1,39 +1,85 @@
 import { useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { useAuthStore } from '@/store/auth.store';
-import { login } from '@/services/auth.service';
-import { loginSchema } from '@/schemas/auth.schemas';
-import GoogleSignInButton, { getOAuthErrorMessage } from '@/components/auth/GoogleSignInButton';
+import axios from 'axios';
 
-export default function LoginPage() {
+export default function ResetPasswordPage() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const setUser = useAuthStore((state) => state.setUser);
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const token = searchParams.get('token');
+
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(
-    () => getOAuthErrorMessage(searchParams.get('error')),
-  );
+  const [error, setError] = useState<string | null>(null);
+
+  if (!token) {
+    return (
+      <div
+        style={{
+          minHeight: '100vh',
+          background: 'var(--darker)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        <div
+          className="magic-card"
+          style={{ padding: '2.5rem', width: '100%', maxWidth: '420px', boxShadow: '0 0 50px rgba(108,99,255,0.12)' }}
+        >
+          <h1
+            className="magic-title"
+            style={{
+              fontFamily: 'Cinzel, serif',
+              fontSize: '1.5rem',
+              textAlign: 'center',
+              marginBottom: '1rem',
+            }}
+          >
+            Недействительная ссылка
+          </h1>
+          <p
+            style={{
+              color: '#64748b',
+              textAlign: 'center',
+              marginBottom: '2rem',
+            }}
+          >
+            Ссылка для сброса пароля недействительна или истекла.
+          </p>
+          <button
+            onClick={() => navigate('/forgot-password')}
+            className="btn-magic-primary"
+            style={{ width: '100%', padding: '13px', fontSize: '1rem' }}
+          >
+            Запросить новую ссылку
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError(null);
 
-    try {
-      loginSchema.parse({ email, password });
-    } catch {
-      setError('Проверьте введённые данные');
+    if (newPassword !== confirmPassword) {
+      setError('Пароли не совпадают');
+      return;
+    }
+
+    if (newPassword.length < 6) {
+      setError('Пароль должен содержать минимум 6 символов');
       return;
     }
 
     setIsLoading(true);
+
     try {
-      const response = await login({ email, password });
-      setUser(response.user);
-      navigate('/levels');
+      await axios.post('/api/auth/reset-password', { token, newPassword });
+      navigate('/login', { state: { message: 'Пароль успешно изменен' } });
     } catch (err: unknown) {
-      setError((err as { response?: { data?: { error?: string } } }).response?.data?.error || 'Ошибка входа');
+      setError((err as { response?: { data?: { error?: string } } }).response?.data?.error || 'Ошибка сброса пароля');
     } finally {
       setIsLoading(false);
     }
@@ -57,12 +103,12 @@ export default function LoginPage() {
           className="magic-title"
           style={{
             fontFamily: 'Cinzel, serif',
-            fontSize: '1.75rem',
+            fontSize: '1.5rem',
             textAlign: 'center',
             marginBottom: '0.5rem',
           }}
         >
-          Вход в игру
+          Новый пароль
         </h1>
         <p
           style={{
@@ -71,7 +117,7 @@ export default function LoginPage() {
             marginBottom: '2rem',
           }}
         >
-          Продолжи своё приключение
+          Введите новый пароль
         </p>
 
         <form onSubmit={handleSubmit}>
@@ -84,16 +130,17 @@ export default function LoginPage() {
               display: 'block',
             }}
           >
-            Email
+            Новый пароль
           </label>
           <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            type="password"
+            value={newPassword}
+            onChange={(e) => setNewPassword(e.target.value)}
             className="magic-input"
             style={{ marginBottom: '1.25rem' }}
-            placeholder="your@email.com"
+            placeholder="••••••••"
             required
+            minLength={6}
           />
 
           <label
@@ -105,16 +152,17 @@ export default function LoginPage() {
               display: 'block',
             }}
           >
-            Пароль
+            Подтвердите пароль
           </label>
           <input
             type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
             className="magic-input"
             style={{ marginBottom: '1.25rem' }}
             placeholder="••••••••"
             required
+            minLength={6}
           />
 
           <button
@@ -123,24 +171,8 @@ export default function LoginPage() {
             className="btn-magic-primary"
             style={{ width: '100%', padding: '13px', fontSize: '1rem', marginTop: '0.5rem', opacity: isLoading ? 0.6 : 1, cursor: isLoading ? 'not-allowed' : 'pointer' }}
           >
-            {isLoading ? 'Загрузка...' : 'Войти'}
+            {isLoading ? 'Загрузка...' : 'Изменить пароль'}
           </button>
-
-          <p
-            style={{
-              color: '#64748b',
-              fontSize: '0.85rem',
-              textAlign: 'center',
-              marginTop: '0.75rem',
-            }}
-          >
-            <span
-              onClick={() => navigate('/forgot-password')}
-              style={{ color: '#fbbf24', fontWeight: 600, cursor: 'pointer' }}
-            >
-              Забыл пароль?
-            </span>
-          </p>
 
           {error && (
             <p
@@ -156,22 +188,6 @@ export default function LoginPage() {
           )}
         </form>
 
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '0.75rem',
-            marginTop: '1.25rem',
-            marginBottom: '0.25rem',
-          }}
-        >
-          <div style={{ flex: 1, height: 1, backgroundColor: 'rgba(148,163,184,0.25)' }} />
-          <span style={{ color: '#64748b', fontSize: '0.8rem' }}>или</span>
-          <div style={{ flex: 1, height: 1, backgroundColor: 'rgba(148,163,184,0.25)' }} />
-        </div>
-
-        <GoogleSignInButton />
-
         <p
           style={{
             color: '#64748b',
@@ -180,12 +196,11 @@ export default function LoginPage() {
             marginTop: '1.5rem',
           }}
         >
-          Нет аккаунта?{' '}
           <span
-            onClick={() => navigate('/register')}
+            onClick={() => navigate('/login')}
             style={{ color: '#fbbf24', fontWeight: 600, cursor: 'pointer' }}
           >
-            Зарегистрироваться
+            Вернуться к входу
           </span>
         </p>
       </div>
