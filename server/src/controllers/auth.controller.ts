@@ -8,7 +8,7 @@ import { prisma } from "../db/prisma";
 import { loginSchema, registerSchema } from "../schemas/auth.schemas";
 import { clearAuthCookie, setAuthCookie, signAuthJwt } from "../utils/jwtCookie";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+const resend = new Resend(process.env.RESEND_API_KEY || 're_mock_key_for_testing');
 
 function validationErrorMessage(error: ZodError): string {
   const first = error.issues[0];
