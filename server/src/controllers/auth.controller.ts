@@ -116,7 +116,7 @@ export async function forgotPassword(req: Request, res: Response) {
   const resetUrl = `${process.env.CLIENT_URL}/reset-password?token=${resetToken}`;
   try {
     await resend.emails.send({
-      from: 'onboarding@resend.dev',
+      from: 'noreply@nairous.ru',
       to: user.email,
       subject: 'Сброс пароля',
       html: `
