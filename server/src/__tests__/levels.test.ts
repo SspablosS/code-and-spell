@@ -17,18 +17,17 @@ describe('Levels API', () => {
     await prisma.$disconnect();
   });
 
-  beforeEach(async () => {
-    // Очистка перед каждым тестом — только тестовых пользователей
-    await prisma.user.deleteMany({
-      where: { email: { contains: 'test' } }
-    });
-  });
-
   const testUser = {
     email: 'levels-test@example.com',
     password: 'SecurePass123!',
     username: 'levelstest',
   };
+
+  beforeEach(async () => {
+    await prisma.user.deleteMany({
+      where: { email: testUser.email }
+    });
+  });
 
   let authToken: string;
 
